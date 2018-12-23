@@ -20,7 +20,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         Intent intent = null;
         if(v.getId()==R.id.nextbtn)
-            intent=new Intent(this, SetupActivity.class);
+            intent=new Intent(this, InstractionActivity.class);
         if(intent!=null)
             startActivity(intent);
     }

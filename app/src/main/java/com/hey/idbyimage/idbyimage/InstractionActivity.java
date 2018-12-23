@@ -24,8 +24,8 @@ public class InstractionActivity extends AppCompatActivity implements View.OnCli
         Intent intent = null;
         if(v.getId()==R.id.backbtn)
             intent=new Intent(this, WelcomeActivity.class);
-        else if(v.getId()==R.id.backbtn);
-
+        else if(v.getId()==R.id.startbtn)
+            intent=new Intent(this, SetupActivity.class);
         if(intent!=null)
             startActivity(intent);
     }

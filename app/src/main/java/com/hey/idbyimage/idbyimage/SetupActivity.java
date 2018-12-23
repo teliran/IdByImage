@@ -28,11 +28,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+        numOfImages=CountImages();
         initElements();
         setButtonListener();
         setTextForRatings();
         loadSetupScreen();
-        numOfImages=CountImages();
+
     }
 
     private void setButtonListener() {
@@ -142,6 +143,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         image2.setBackgroundResource(drawableResourceId2);
         rating1prog.setText("0");
         rating2prog.setText("0");
+        if(numOfPage==numOfImages/2)
+            next.setText("Done");
+        else
+            next.setText("Next");
         setIndicator();
     }
 
