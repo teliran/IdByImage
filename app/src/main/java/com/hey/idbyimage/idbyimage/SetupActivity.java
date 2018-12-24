@@ -1,5 +1,8 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,18 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
+    SharedPreferences imagePref;
+
     Button back,next;
     SeekBar rating1,rating2;
     ImageView image1,image2;
     TextView indicator,rating1prog,rating2prog;
     int numOfImages,numOfPage;
-    SetupController control;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         numOfImages=CountImages();
+        imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);;
         initElements();
         setButtonListener();
         setTextForRatings();
@@ -125,8 +130,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private void handleBackClick() {
         if(numOfPage==1)
-            //move to the prevActivity
-            return;
+            startActivity(new Intent(this,InstractionActivity.class));
         else{
             numOfPage--;
             loadSetupScreen();
@@ -135,14 +139,18 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loadSetupScreen() {
-        int drawableResourceId1 = this.getResources().getIdentifier(getImageFileName(2*numOfPage-1), "drawable", this.getPackageName());
-        int drawableResourceId2 = this.getResources().getIdentifier(getImageFileName(2*numOfPage), "drawable", this.getPackageName());
-        rating1.setProgress(0);
-        rating2.setProgress(0);
+        String imageName1=getImageFileName(2*numOfPage-1);
+        String imageName2=getImageFileName(2*numOfPage);
+        int drawableResourceId1 = this.getResources().getIdentifier(imageName1, "drawable", this.getPackageName());
+        int drawableResourceId2 = this.getResources().getIdentifier(imageName2, "drawable", this.getPackageName());
+        if(!updateRatingsFromRes(imageName1,imageName2)) {
+            rating1.setProgress(0);
+            rating2.setProgress(0);
+            rating1prog.setText("1");
+            rating2prog.setText("1");
+        }
         image1.setBackgroundResource(drawableResourceId1);
         image2.setBackgroundResource(drawableResourceId2);
-        rating1prog.setText("0");
-        rating2prog.setText("0");
         if(numOfPage==numOfImages/2)
             next.setText("Done");
         else
@@ -150,8 +158,32 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setIndicator();
     }
 
+    private boolean updateRatingsFromRes(String imageName1, String imageName2) {
+        int ratingofImage1=imagePref.getInt(imageName1,1);
+        int ratingofImage2=imagePref.getInt(imageName2,1);
+        if(ratingofImage1==1 && ratingofImage2==2)
+            return false;
+        else{
+            rating1.setProgress(ratingofImage1-1);
+            rating2.setProgress(ratingofImage2-1);
+            return true;
+        }
+
+    }
+
     private void setIndicator() {
         indicator.setText(numOfPage+"/"+numOfImages/2);
+    }
+
+    private void saveRatings(){
+        String imageName1 = getImageFileName(2*numOfPage-1);
+        String imageName2 = getImageFileName(2*numOfPage);
+        SharedPreferences.Editor editor = imagePref.edit();
+        editor.putInt(imageName1, rating1.getProgress()+1);
+        editor.putInt(imageName2, rating2.getProgress()+1);
+        editor.commit();
+        String msg = "Just retrived " + imagePref.getInt(imageName1,0) + "and" +imagePref.getInt(imageName2,0);
+        Toast.makeText(SetupActivity.this,msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -164,6 +196,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             //move to the next screen - finished rating
             return;
         else
+            saveRatings();
             numOfPage++;
             loadSetupScreen();
     }
