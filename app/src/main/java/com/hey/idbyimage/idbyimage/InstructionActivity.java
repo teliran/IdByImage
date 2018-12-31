@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class InstractionActivity extends AppCompatActivity implements View.OnClickListener{
+public class InstructionActivity extends AppCompatActivity implements View.OnClickListener{
     Button back;
     Button start;
     @Override

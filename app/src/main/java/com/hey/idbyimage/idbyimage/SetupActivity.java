@@ -12,9 +12,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hey.idbyimage.idbyimage.ControllerClass.SetupController;
-import com.hey.idbyimage.idbyimage.ControllerClass.SetupControllerImpl;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,9 +126,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void handleBackClick() {
-        if(numOfPage==1)
-            startActivity(new Intent(this,InstractionActivity.class));
+        if(numOfPage==1) {
+            saveRatings();
+            startActivity(new Intent(this, InstructionActivity.class));
+        }
         else{
+            saveRatings();
             numOfPage--;
             loadSetupScreen();
         }
@@ -183,7 +183,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         editor.putInt(imageName2, rating2.getProgress()+1);
         editor.commit();
         String msg = "Just retrived " + imagePref.getInt(imageName1,0) + "and" +imagePref.getInt(imageName2,0);
-        Toast.makeText(SetupActivity.this,msg, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -192,12 +191,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void handleNextClick() {
-        if(numOfPage==numOfImages/2)
-            //move to the next screen - finished rating
-            return;
-        else
+        if (numOfPage == numOfImages / 2) {
+            saveRatings();
+            //move to next screen
+        }
+        else{
             saveRatings();
             numOfPage++;
             loadSetupScreen();
+        }
     }
+
 }
