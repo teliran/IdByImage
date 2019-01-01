@@ -30,7 +30,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         numOfImages=CountImages();
-        imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);;
+        imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
         initElements();
         setButtonListener();
         setTextForRatings();

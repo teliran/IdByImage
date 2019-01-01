@@ -1,6 +1,8 @@
 package com.hey.idbyimage.idbyimage;
 
 import android.support.test.rule.ActivityTestRule;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +25,12 @@ public class InstructionActivityTest {
 
     @Test
     public void testLayout(){
-        // TODO: 31-Dec-18
+        Button back = iActivity.findViewById(R.id.backbtn);
+        Button start = iActivity.findViewById(R.id.startbtn);
+        TextView content = iActivity.findViewById(R.id.instructionText);
+        assertNotNull(back);
+        assertNotNull(start);
+        assertNotNull(content);
     }
 
     @Test

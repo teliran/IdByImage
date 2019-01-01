@@ -1,6 +1,12 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,12 +30,27 @@ public class WelcomeActivityTest {
 
     @Test
     public void testLayout(){
-        // TODO: 31-Dec-18
+        Button btn = wActivity.findViewById(R.id.nextbtn);
+        TextView header = wActivity.findViewById(R.id.titleText);
+        TextView body = wActivity.findViewById(R.id.bodyText);
+
+        assertNotNull(btn);
+        assertNotNull(header);
+        assertNotNull(body);
     }
 
     @Test
     public void testClick(){
-        // TODO: 31-Dec-18
+        // TODO: 31-Dec-18 - Does not work
+        Button btn = wActivity.findViewById(R.id.nextbtn);
+        wActivity.onClick(btn);
+        Button back = wActivity.findViewById(R.id.backbtn);
+        Button start = wActivity.findViewById(R.id.startbtn);
+        TextView content = wActivity.findViewById(R.id.instructionText);
+        assertNotNull(back);
+        assertNotNull(start);
+        assertNotNull(content);
+
     }
 
     @After
