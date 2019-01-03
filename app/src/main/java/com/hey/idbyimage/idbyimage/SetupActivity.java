@@ -19,11 +19,20 @@ import java.util.List;
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences imagePref;
 
-    Button back,next;
-    SeekBar rating1,rating2;
-    ImageView image1,image2;
-    TextView indicator,rating1prog,rating2prog;
-    int numOfImages,numOfPage;
+    private Button back,next;
+    private SeekBar rating1,rating2;
+    private ImageView image1,image2;
+    private TextView indicator,rating1prog,rating2prog;
+
+    public int getNumOfImages() {
+        return numOfImages;
+    }
+
+    public int getNumOfPage() {
+        return numOfPage;
+    }
+
+    private int numOfImages,numOfPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +159,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             rating2prog.setText("1");
         }
         image1.setBackgroundResource(drawableResourceId1);
+        image1.setTag(imageName1);
         image2.setBackgroundResource(drawableResourceId2);
+        image2.setTag(imageName2);
         if(numOfPage==numOfImages/2)
             next.setText("Done");
         else
@@ -193,7 +204,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
             saveRatings();
-            //move to next screen
+            startActivity(new Intent(this,MenuActivity.class));
         }
         else{
             saveRatings();

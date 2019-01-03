@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".InstructionActivity" />
         <activity android:name=".SetupActivity" />
-        <activity android:name=".LockScreenActivity"></activity>
+        <activity android:name=".LockScreenActivity" />
+        <activity android:name=".MenuActivity"></activity>
     </application>
 
 </manifest>

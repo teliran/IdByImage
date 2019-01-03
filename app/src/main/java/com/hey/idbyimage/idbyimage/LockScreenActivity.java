@@ -45,7 +45,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
     private void updateImages() {
         HashMap<String,Integer> imageRatings = getAllRatingsMap();
-        ArrayList<String> images = ImageSelectionAlgo.createImgSet(imageRatings);//Call the shuffle algorthem
+        ArrayList<String> images = new ArrayList<String>();//ImageSelectionAlgo.createImgSet(imageRatings);//Call the shuffle algorthem
         updateImageView(images);
     }
 
@@ -96,7 +96,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if(v==submit){
-            handleSubmit();
+            //handleSubmit();
         }
         else {
             int id=v.getId();
@@ -114,7 +114,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void handleSubmit() {
+    /*private void handleSubmit() {
         if(ValidateSelected()){
             Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
         }
@@ -129,8 +129,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
                 //TODO
             }
         }
-    }
-
+    }*/
+/*
     private boolean ValidateSelected() {
         if(selected.size()!=imgsToSelect) //Checking for valid number of selected imgs
             return false;
@@ -142,4 +142,5 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
         return true;
     }
+    */
 }
