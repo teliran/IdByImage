@@ -71,7 +71,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
     private void updateImages() {
         HashMap<String,Integer> imageRatings = getAllRatingsMap();
-        ArrayList<String> images = new ArrayList<String>();//ImageSelectionAlgo.createImgSet(imageRatings);//Call the shuffle algorthem
+        ArrayList<String> images = ImageSelectionAlgo.createImgSet(imageRatings);//Call the shuffle algorthem
         updateImageView(images);
     }
 
