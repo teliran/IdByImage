@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity implements  View.OnClickListener{
-    Button trybtn;
-    Button activatebtn;
-    Button settingsbtn;
+    private Button trybtn;
+    private Button activatebtn;
+    private Button settingsbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

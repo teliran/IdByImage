@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener{
-    Button next;
+    private Button next;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

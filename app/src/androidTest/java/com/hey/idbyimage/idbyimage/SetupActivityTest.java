@@ -81,7 +81,7 @@ public class SetupActivityTest {
             });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
-    }
+        }
 
 
         int numOfPage2=sActivity.getNumOfPage();
