@@ -16,13 +16,39 @@ import java.util.HashMap;
 import java.util.List;
 
 public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
-    SharedPreferences imagePref;
-    Button submit;
-    ArrayList<String> selected;
-    boolean onFailShowPin;
-    int numOfImgs;
-    int imgsToSelect = 3;
+    private SharedPreferences imagePref;
+    private Button submit;
+    private ArrayList<String> selected;
+    private boolean onFailShowPin;
+    private int numOfImgs;
+    private int imgsToSelect = 3;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
+
+
+    public SharedPreferences getImagePref() {
+        return imagePref;
+    }
+
+    public Button getSubmit() {
+        return submit;
+    }
+
+    public ArrayList<String> getSelected() {
+        return selected;
+    }
+
+    public boolean isOnFailShowPin() {
+        return onFailShowPin;
+    }
+
+    public int getNumOfImgs() {
+        return numOfImgs;
+    }
+
+    public int getImgsToSelect() {
+        return imgsToSelect;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +122,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if(v==submit){
-            //handleSubmit();
+            handleSubmit();
         }
         else {
             int id=v.getId();
@@ -114,7 +140,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /*private void handleSubmit() {
+    private void handleSubmit() {
         if(ValidateSelected()){
             Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
         }
@@ -129,8 +155,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
                 //TODO
             }
         }
-    }*/
-/*
+    }
+
     private boolean ValidateSelected() {
         if(selected.size()!=imgsToSelect) //Checking for valid number of selected imgs
             return false;
@@ -142,5 +168,5 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
         return true;
     }
-    */
+
 }
