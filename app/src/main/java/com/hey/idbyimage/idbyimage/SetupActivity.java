@@ -196,7 +196,6 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         String msg = "Just retrived " + imagePref.getInt(imageName1,0) + "and" +imagePref.getInt(imageName2,0);
     }
 
-
     private String getImageFileName(int index){
         return "p"+index;
     }

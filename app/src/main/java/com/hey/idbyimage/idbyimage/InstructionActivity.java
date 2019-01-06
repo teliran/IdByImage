@@ -1,6 +1,8 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +26,13 @@ public class InstructionActivity extends AppCompatActivity implements View.OnCli
         Intent intent = null;
         if(v.getId()==R.id.backbtn)
             intent=new Intent(this, WelcomeActivity.class);
-        else if(v.getId()==R.id.startbtn)
-            intent=new Intent(this, SetupActivity.class);
+        else if(v.getId()==R.id.startbtn) {
+            SharedPreferences pref =getSharedPreferences("pinPref", Context.MODE_PRIVATE);
+            if(pref.getAll().size()==0)
+                intent = new Intent(this, PinLockActivity.class);
+            else
+                intent = new Intent(this,SetupActivity.class);
+        }
         if(intent!=null)
             startActivity(intent);
     }
