@@ -20,11 +20,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/you_are_about_to_begin_the_rating_process_of_50_images_n_it_is_crucial_that_your_rating_will_spread_on_all_of_the_posiable_ratings_in_order_to_provide_the_necesery_security_n_please_take_your_time_and_rate_the_images_from_1_disliking_the_image_to_10_liking_the_image_n_at_any_time_during_the_proccess_you_can_return_and_update_your_ratings_if_you_realize_that_your_rating_was_wrong_n"
-        android:textSize="18sp"
+        android:text="You are about to rate a set of images. \nIn order to make the identification as accurate as poosiable we encourge you to rate the images as versitail and accurrate as possible. \nOnce you will finish the initial rating you will be asked to choose the most beatful images from a set of images. \nIf you will choose your top rated images, you will be granted the access to your device. \nNote! there is a safety machanisem to prevent you from getting locked out of your device."
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

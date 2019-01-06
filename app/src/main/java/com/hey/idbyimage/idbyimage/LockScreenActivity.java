@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
     private SharedPreferences imagePref;
-    private Button submit;
+    private Button submit,back;
     private ArrayList<String> selected;
     private boolean onFailShowPin;
     private int numOfImgs;
@@ -65,6 +65,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
         submit=findViewById(R.id.submit);
         submit.setOnClickListener(this);
+        back=findViewById(R.id.backBtn);
+        back.setOnClickListener(this);
+
         for (int i=0;i<numOfImgs;i++){
             int numOfImg = i+1;
             int id = getResources().getIdentifier("img" + numOfImg, "id", this.getPackageName());
@@ -132,6 +135,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         if(v==submit){
             handleSubmit();
         }
+        else if(v==back)
+            startActivity(new Intent(this,MenuActivity.class));
         else {
             int id=v.getId();
             ImageView img =findViewById(id);

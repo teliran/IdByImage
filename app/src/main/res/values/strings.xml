@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">IdByImage</string>
     <string name="start">Start</string>
-    <string name="you_are_about_to_begin_the_rating_process_of_50_images_n_it_is_crucial_that_your_rating_will_spread_on_all_of_the_posiable_ratings_in_order_to_provide_the_necesery_security_n_please_take_your_time_and_rate_the_images_from_1_disliking_the_image_to_10_liking_the_image_n_at_any_time_during_the_proccess_you_can_return_and_update_your_ratings_if_you_realize_that_your_rating_was_wrong_n">You are about to begin the rating process of 50 images  It is crucial that your rating will spread on all of the posiable ratings in order to provide the necesery security  Please take your time and rate the images from 1 (Disliking the image) to 10(liking the image)  At any time during the proccess you can return and update your ratings if you realize that your rating was wrong</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
-    <string name="you_are_about_to_start_a_new_and_experamental_way_to_enter_your_device_n_as_we_will_try_to_recognize_your_by_your_preferance_of_diffrent_images_n_after_rating_our_unique_images_we_we_will_display_a_grid_of_images_for_you_to_select_the_most_beutiful_images_n_once_you_select_the_correct_number_of_images_we_will_check_if_it_is_in_fact_the_top_rated_images_n_as_you_can_understand_the_rating_phase_is_crucial_in_order_to_get_the_most_of_this_app">You are about to start a new and experamental way to enter your device   As we will try to recognize your by your preferance of diffrent images   After rating our unique images we we will display a grid of images for you to select the most beutiful images  Once you select the correct number of images we will check if it is in fact the top rated images  As you can understand the rating phase is crucial in order to get the most of this app</string>
     <string name="welcome_to_id_by_image">Welcome to ID by image</string>
     <string name="title_activity_settings">Settings</string>
 
