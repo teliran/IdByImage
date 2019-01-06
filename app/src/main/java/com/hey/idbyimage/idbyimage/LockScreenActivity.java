@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
     private SharedPreferences imagePref;
@@ -22,6 +23,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private boolean onFailShowPin;
     private int numOfImgs;
     private int imgsToSelect = 3;
+    private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
 
 
@@ -56,32 +58,38 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_lock_screen);
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
         selected=new ArrayList<String>();
+        shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
+        numOfImgs=9;
         updateImages();
-        numOfImgs=12;
+
         submit=findViewById(R.id.submit);
         submit.setOnClickListener(this);
         for (int i=0;i<numOfImgs;i++){
             int numOfImg = i+1;
-            int id = getResources().getIdentifier("R.id.img" + numOfImg, "id", this.getPackageName());
+            int id = getResources().getIdentifier("img" + numOfImg, "id", this.getPackageName());
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
     }
 
     private void updateImages() {
-        HashMap<String,Integer> imageRatings = getAllRatingsMap();
-        ArrayList<String> images = ImageSelectionAlgo.createImgSet(imageRatings);//Call the shuffle algorthem
+        List<Map.Entry<String, Integer>> imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
+        ArrayList<String> images = new ArrayList<String>();
+        for (Map.Entry<String, Integer> entry:imagesEntry) {
+            images.add(entry.getKey());
+        }
         updateImageView(images);
     }
 
     private void updateImageView(ArrayList<String> images) {
         for (int i = 1; i <= images.size(); i++) {
             int drawableResourceId = this.getResources().getIdentifier(images.get(i-1), "drawable", this.getPackageName());
-            int id = getResources().getIdentifier("R.id.img" + i, "id", this.getPackageName());
+            int id = getResources().getIdentifier("img" +i, "id", this.getPackageName());
             ImageView img = findViewById(id);
             img.setBackgroundResource(drawableResourceId);
             img.setTag(images.get(i-1));
+            img.setImageResource(android.R.color.transparent);
         }
     }
 
@@ -130,12 +138,11 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             String name = (String) img.getTag();
             if (selected.contains(name)) {
                 selected.remove(name);
-                //Remove sign from img
-                //TODO
+                img.setImageResource(android.R.color.transparent);
+                return;
             }
-
-            //TODO
-            //Add the sign to show user that that photo has been selected
+            int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());
+            img.setImageDrawable(this.getResources().getDrawable(drawableResourceId,null));
             selected.add(name);
         }
     }
@@ -160,8 +167,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private boolean ValidateSelected() {
         if(selected.size()!=imgsToSelect) //Checking for valid number of selected imgs
             return false;
-        float avg = ImageSelectionAlgo.getMean();
-        float dev = ImageSelectionAlgo.getDev();
+        double avg = shuffleAlgorithm.getAvg();
+        double dev = shuffleAlgorithm.getDev();
         for (int i=0;i<imgsToSelect;i++){
             if(imagePref.getInt(selected.get(i),0)<=0 || imagePref.getInt(selected.get(i),0)<avg+dev) //Checking that the user ranked them higher then mean+dev
                 return false;
