@@ -55,7 +55,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lock_screen);
+        //Check matrix scale- if 3x2:
+        //numOfImgs=6;
+        //this.imgsToSelect=2
+        //setContentView(R.layout.activity_lock_screen_3x2);
+        //else
+        setContentView(R.layout.activity_lock_screen_3x3);
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());

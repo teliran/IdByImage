@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LockScreenActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/titleText"
@@ -19,31 +17,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/img1"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toStartOf="@+id/img2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <ImageView
         android:id="@+id/img2"
-        android:layout_width="120dp"
+        android:layout_width="121dp"
         android:layout_height="120dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.0"
-        />
+        android:layout_marginEnd="1dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/img3"
+        app:layout_constraintStart_toEndOf="@+id/img1"
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <ImageView
         android:id="@+id/img3"
@@ -51,78 +47,78 @@
         android:layout_height="120dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img2"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <ImageView
         android:id="@+id/img5"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img2"
-        />
+        android:layout_marginEnd="1dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/img6"
+        app:layout_constraintStart_toEndOf="@+id/img4"
+        app:layout_constraintTop_toBottomOf="@+id/img2" />
 
     <ImageView
         android:id="@+id/img6"
-        android:layout_width="119dp"
+        android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img5"
-        app:layout_constraintTop_toBottomOf="@+id/img3"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/img3" />
 
     <ImageView
         android:id="@+id/img7"
-        android:layout_width="119dp"
+        android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toStartOf="@+id/img8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img4"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/img4" />
 
     <ImageView
         android:id="@+id/img8"
-        android:layout_width="119dp"
+        android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img5"
-        />
+        android:layout_marginEnd="1dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/img9"
+        app:layout_constraintStart_toEndOf="@+id/img7"
+        app:layout_constraintTop_toBottomOf="@+id/img5" />
 
     <ImageView
         android:id="@+id/img9"
-        android:layout_width="119dp"
+        android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img8"
-        app:layout_constraintTop_toBottomOf="@+id/img6"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/img6" />
 
     <ImageView
         android:id="@+id/img4"
-        android:layout_width="119dp"
+        android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toStartOf="@+id/img5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img1"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/img1" />
 
     <Button
         android:id="@+id/submit"
