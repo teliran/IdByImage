@@ -168,18 +168,49 @@ public class LockScreenActivityTest {
             lActivityTest.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                        lActivityTest.getActivity().onClick(images[0]);
+                    lActivityTest.getActivity().onClick(images[0]);
                 }
             });
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         assertEquals(1,lActivity.getSelected().size());
-    }
 
-    @Test
-    public void testSubmit(){
+        try {
+            lActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lActivityTest.getActivity().onClick(images[0]);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertEquals(0,lActivity.getSelected().size());
 
+        try {
+            lActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lActivityTest.getActivity().onClick(images[0]);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertEquals(1,lActivity.getSelected().size());
+
+        try {
+            lActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lActivityTest.getActivity().onClick(images[1]);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertEquals(2,lActivity.getSelected().size());
     }
 
 
