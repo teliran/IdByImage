@@ -91,7 +91,63 @@ public class PinLockActivityTest {
 
     @Test
     public void testGoodPin(){
-        //Check not the same password
+        //Check the same password
+        try {
+            pActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i=0;i<4;i++)
+                        pin[i].setText(""+(i+5));
+                    pActivityTest.getActivity().onClick(next);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertFalse(pActivity.isFirstScreen());
+
+        try {
+            pActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i=0;i<4;i++)
+                        pin[i].setText(""+(i+5));
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertEquals(pActivity.getDefined(),"5678");
+        assertTrue(pActivity.validatePin());
+
+        //Check the same password with regret
+
+        try {
+            pActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i=0;i<4;i++)
+                        pin[i].setText(""+(i+4));
+                    pActivityTest.getActivity().onClick(next);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertFalse(pActivity.isFirstScreen());
+
+        try {
+            pActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pActivityTest.getActivity().onClick(back);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        assertTrue(pActivity.isFirstScreen());
         try {
             pActivityTest.runOnUiThread(new Runnable() {
                 @Override
