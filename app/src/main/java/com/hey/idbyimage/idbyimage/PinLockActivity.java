@@ -16,10 +16,62 @@ import android.widget.Toast;
 public class PinLockActivity extends AppCompatActivity implements View.OnClickListener{
     SharedPreferences pinPref;
 
-    Button nextBtn,backBtn;
-    EditText firstPin, secondPin, thirdPin, fourthPin;
-    String pin,defined;
-    boolean firstScreen;
+    private Button nextBtn,backBtn;
+    private EditText firstPin, secondPin, thirdPin, fourthPin;
+    private String pin,defined;
+    private boolean firstScreen;
+
+    public SharedPreferences getPinPref() {
+        return pinPref;
+    }
+
+    public Button getNextBtn() {
+        return nextBtn;
+    }
+
+    public Button getBackBtn() {
+        return backBtn;
+    }
+
+    public EditText getFirstPin() {
+        return firstPin;
+    }
+
+    public EditText getSecondPin() {
+        return secondPin;
+    }
+
+    public EditText getThirdPin() {
+        return thirdPin;
+    }
+
+    public EditText getFourthPin() {
+        return fourthPin;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public String getDefined() {
+        return defined;
+    }
+
+    public boolean isFirstScreen() {
+        return firstScreen;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public void setDefined(String defined) {
+        this.defined = defined;
+    }
+
+    public void setFirstScreen(boolean firstScreen) {
+        this.firstScreen = firstScreen;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +87,10 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         Intent intent = null;
         if (view==nextBtn) {
-            if(firstScreen)
+            if(firstScreen) {
+                checkPin();
                 load2Screen();
+            }
             else
                 if (validatePin()) {
                     SharedPreferences.Editor editor = pinPref.edit();
@@ -89,7 +143,7 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
         initPinSequence();
     }
 
-    private boolean validatePin() {
+    public boolean validatePin() {
         return defined.equals(pin);
     }
 
@@ -106,7 +160,7 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
         backBtn.setOnClickListener(this);
     }
 
-    private boolean checkPin() {
+    public boolean checkPin() {
         try{
             pin = firstPin.getText().toString()+
                     secondPin.getText().toString()+
@@ -115,7 +169,7 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
             if (pin.length()>=4){
                 return true;
             }
-
+            pin=null;
             return false;
         }catch (Exception e){
             return false;
