@@ -51,6 +51,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         return imgsToSelect;
     }
 
+    public void setOnFailShowPin(boolean onFailShowPin) {
+        this.onFailShowPin = onFailShowPin;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,17 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         //setContentView(R.layout.activity_lock_screen_3x2);
         //else
         setContentView(R.layout.activity_lock_screen_3x3);
+        initVars();
+
+        for (int i=0;i<numOfImgs;i++){
+            int numOfImg = i+1;
+            int id = getResources().getIdentifier("img" + numOfImg, "id", this.getPackageName());
+            ImageView img = findViewById(id);
+            img.setOnClickListener(this);
+        }
+    }
+
+    private void initVars() {
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
@@ -72,13 +86,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         submit.setOnClickListener(this);
         back=findViewById(R.id.backBtn);
         back.setOnClickListener(this);
-
-        for (int i=0;i<numOfImgs;i++){
-            int numOfImg = i+1;
-            int id = getResources().getIdentifier("img" + numOfImg, "id", this.getPackageName());
-            ImageView img = findViewById(id);
-            img.setOnClickListener(this);
-        }
     }
 
     private void updateImages() {
@@ -174,7 +181,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private boolean ValidateSelected() {
+    public boolean ValidateSelected() {
         if(selected.size()!=imgsToSelect) //Checking for valid number of selected imgs
             return false;
         double avg = shuffleAlgorithm.getAvg();
