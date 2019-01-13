@@ -80,4 +80,7 @@
     <string name="numberlockimages">Lock screen images:</string>
     <string name="numimages">Images to select:</string>
     <string name="numIterations">Screen Lock Iterations:</string>
+    <string name="action_settings">action_settings</string>
+    <string name="Number_of_images_screen">Lock Screen</string>
+    <string name="Number_of_images_in_lock_screen">Number of images in lock screen</string>
 </resources>
