@@ -10,6 +10,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 
 import static org.junit.Assert.*;
@@ -133,6 +136,45 @@ public class LockScreenActivityTest {
 
         assertTrue(lActivity.isOnFailShowPin());
         lActivity.setOnFailShowPin(false);
+    }
+
+    @Test
+    public void testSelectkBest(){
+        HashMap<String,Integer> ratings = lActivity.getAllRatingsMap();
+        int numToSelect = lActivity.getImgsToSelect();
+        int[] ratingsArr = new int[images.length];
+        for(int i=0;i<ratingsArr.length;i++){
+            ratingsArr[i]=ratings.get((String)images[i].getTag());
+        }
+        ArrayList<String> selectHighest = new ArrayList<String>();
+        for (int j=0;j<numToSelect;j++) {
+            int maxIndex = 0, maxVal = 0;
+            for (int i = 0; i < ratingsArr.length; i++) {
+                if (ratingsArr[i] > maxVal) {
+                    maxVal = ratingsArr[i];
+                    maxIndex = i;
+                }
+            }
+            selectHighest.add((String)images[maxIndex].getTag());
+            ratingsArr[maxIndex]=0;
+        }
+        lActivity.setSelected(selectHighest);
+        assertTrue(lActivity.ValidateSelected());
+    }
+
+    @Test
+    public void testOnlyOneAdded(){
+        try {
+            lActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                        lActivityTest.getActivity().onClick(images[0]);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        assertEquals(1,lActivity.getSelected().size());
     }
 
     @Test

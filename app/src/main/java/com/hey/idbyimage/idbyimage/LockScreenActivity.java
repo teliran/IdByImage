@@ -55,6 +55,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         this.onFailShowPin = onFailShowPin;
     }
 
+    public void setSelected(ArrayList<String> selected) {
+        this.selected = selected;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +112,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private HashMap<String, Integer> getAllRatingsMap(){
+    public HashMap<String, Integer> getAllRatingsMap(){
         HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
         int loopIndex = CountImages();
         for (int i=1;i<=loopIndex;i++){
