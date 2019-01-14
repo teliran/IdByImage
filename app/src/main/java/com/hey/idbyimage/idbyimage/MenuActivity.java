@@ -31,7 +31,7 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
             //TODO: if it is enabled, disable and stop the kiosk option, if disabled enable it...
         }
         else if(v==settingsbtn){
-            //TODO: Pass to settings screen
+            startActivity(new Intent(this,SettingsActivity.class));
         }
     }
 }
