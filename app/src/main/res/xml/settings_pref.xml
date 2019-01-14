@@ -2,10 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="pref_3x3_value"
+        android:defaultValue="@string/pref_num_images_3x3"
         android:entries="@array/pref_num_images_labels"
         android:entryValues="@array/pref_num_images_values"
         android:key="@string/Number_of_images_screen"
         android:title="@string/Number_of_images_in_lock_screen"/>
+
+    <ListPreference
+        android:defaultValue="@string/pref_num_images_to_select_3"
+        android:entries="@array/pref_num_images_to_select_labels"
+        android:entryValues="@array/pref_num_images_to_select_values"
+        android:key="@string/Number_selected_images"
+        android:title="@string/Number_of_images_to_select"/>
 
 </PreferenceScreen>
