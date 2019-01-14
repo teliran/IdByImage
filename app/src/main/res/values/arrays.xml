@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_num_images_labels">
+        <item>@string/pref_num_images_3x3</item>
+        <item>@string/pref_num_images_2x3</item>
+    </array>
+
+    <string-array name="pref_num_images_values" />
+    <string name="pref_num_images_3x3">3X3</string>
+    <string name="pref_num_images_2x3">2X3</string>
+</resources>

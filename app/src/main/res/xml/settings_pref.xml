@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="pref_3x3_value"
+        android:entries="@array/pref_num_images_labels"
+        android:entryValues="@array/pref_num_images_values"
+        android:key="@string/Number_of_images_screen"
+        android:title="@string/Number_of_images_in_lock_screen"/>
+
+</PreferenceScreen>
