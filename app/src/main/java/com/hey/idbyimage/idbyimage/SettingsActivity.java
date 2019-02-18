@@ -1,5 +1,6 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.content.Context;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,10 +43,20 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        SharedPreferences settingsPref=getSharedPreferences("settingsPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settingsPref.edit();
         if (key.equals("pref_num_images_3x3")) {
-            Log.i("Setting","3X3");
+            editor.putInt("numOfImagesToShow", 9);
         }
-        Log.i("Setting","3X2");
+        else if(key.equals("pref_num_images_2x3"))
+            editor.putInt("numOfImagesToShow", 6);
+        else if(key.equals("pref_num_images_2"))
+            editor.putInt("numOfImagesToSelect", 2);
+        else if(key.equals("pref_num_images_3"))
+            editor.putInt("numOfImagesToSelect", 3);
+        else if(key.equals("pref_num_images_4"))
+            editor.putInt("numOfImagesToSelect", 4);
+        editor.commit();
     }
 
     @Override

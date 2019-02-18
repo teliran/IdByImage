@@ -3,6 +3,7 @@ package com.hey.idbyimage.idbyimage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -62,6 +63,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences settingsPref=getSharedPreferences("settingsPref", Context.MODE_PRIVATE);
+        int a =settingsPref.getInt("numOfImagesToShow",0);
+        int b =settingsPref.getInt("numOfImagesToSelect",0);
+        Toast.makeText(this,"To show: "+a+" To Select: "+b,Toast.LENGTH_SHORT).show();
         //Check matrix scale- if 3x2:
         //numOfImgs=6;
         //this.imgsToSelect=2

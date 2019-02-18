@@ -111,14 +111,19 @@ public class SetupActivityTest {
     }
 
 
+
     @Test
     public void testBack(){
         //simulate a click, only the ui thread can raise this event (Modifing the views
+        int rating1Gen = (int)(Math.random()*9.0);
+        int rating2Gen = (int)(Math.random()*9.0);
+        rating1.setProgress(rating1Gen);
+        rating2.setProgress(rating2Gen);
         int prog1 = rating1.getProgress();
         int prog2 = rating2.getProgress();
         String indic = indicator.getText().toString();
-        String prog1String = rating1prog.getText().toString();
-        String prog2String = rating2prog.getText().toString();
+        String prog1String = ""+(rating1Gen+1);
+        String prog2String = ""+(rating2Gen+1);
 
         assertEquals(image1.getTag(),"p1");
         assertEquals(image2.getTag(),"p2");
@@ -151,6 +156,25 @@ public class SetupActivityTest {
         assertEquals(prog1String,rating1prog.getText().toString());
         assertEquals(prog2String,rating2prog.getText().toString());
     }
+
+    @Test
+    public void testEnd(){
+        //simulate a click, only the ui thread can raise this event (Modifing the views
+        try {
+            sActivityTest.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i=0;i<sActivityTest.getActivity().getNumOfPage();i++)
+                        sActivityTest.getActivity().onClick(next);
+                }
+            });
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        //simulate a click, only the ui thread can raise this event (Modifing the views
+        assertEquals(next.getText().toString(),"Done");
+    }
+
     @After
     public void tearDown() throws Exception {
         sActivity = null;
