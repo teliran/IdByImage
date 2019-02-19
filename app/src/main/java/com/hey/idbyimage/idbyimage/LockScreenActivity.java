@@ -176,6 +176,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private void handleSubmit() {
         if(ValidateSelected()){
             Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
+            finish();
         }
         else {
             if (!onFailShowPin) {

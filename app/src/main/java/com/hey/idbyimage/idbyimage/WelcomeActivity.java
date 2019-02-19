@@ -33,8 +33,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             else
                 intent = new Intent(this, InstructionActivity.class);
         }
-        if(intent!=null)
+        if(intent!=null) {
             startActivity(intent);
+            finish();
+        }
     }
 
     private int CountImages() {
@@ -46,10 +48,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     drawables.add(field.getInt(null));
                 } catch (IllegalAccessException e) {
-                    Toast.makeText(this,"Problem counting images",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this,"Problem counting images",Toast.LENGTH_SHORT).show();
                 }
             }
         }
-        return drawables.size();
+        return drawables.size()-1;
     }
 }

@@ -28,7 +28,8 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         if(v==trybtn)
             startActivity(new Intent(this,LockScreenActivity.class));
         else if(v==activatebtn){
-            //TODO: if it is enabled, disable and stop the kiosk option, if disabled enable it...
+            startActivity(new Intent(this, LockScreenActivity.class));
+            finish();
         }
         else if(v==settingsbtn){
             startActivity(new Intent(this,SettingsActivity.class));
