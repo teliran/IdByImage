@@ -25,13 +25,17 @@ public class InstructionActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         Intent intent = null;
         if(v.getId()==R.id.backbtn)
-            intent=new Intent(this, WelcomeActivity.class);
+            finish();
         else if(v.getId()==R.id.startbtn) {
             SharedPreferences pref =getSharedPreferences("pinPref", Context.MODE_PRIVATE);
-            if(pref.getAll().size()==0)
+            if(pref.getAll().size()==0) {
                 intent = new Intent(this, PinLockActivity.class);
-            else
-                intent = new Intent(this,SetupActivity.class);
+                finish();
+            }
+            else {
+                intent = new Intent(this, SetupActivity.class);
+                finish();
+            }
         }
         if(intent!=null)
             startActivity(intent);

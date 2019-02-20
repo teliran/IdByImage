@@ -1,15 +1,24 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.app.ActivityManager;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.hey.idbyimage.idbyimage.Utils.BaseActivity;
+import com.hey.idbyimage.idbyimage.Utils.KioskMode;
+import com.hey.idbyimage.idbyimage.Utils.MySharedPreferences;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -17,7 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class LockScreenKioskActivity extends BaseActivity implements View.OnClickListener{
     private SharedPreferences imagePref;
     private Button submit,back;
     private ArrayList<String> selected;
@@ -25,6 +35,15 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private int numOfImgs;
     private int imgsToSelect = 3;
     private ShuffleAlgorithm shuffleAlgorithm;
+
+
+    private static final String TAG = LockScreenKioskActivity.class.getSimpleName();
+    final private FragmentManager fragmentManager = getSupportFragmentManager();
+    public static final int RESULT_ENABLE = 11;
+    private DevicePolicyManager devicePolicyManager;
+    private ActivityManager activityManager;
+    private ComponentName componentName;
+
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
 
 
@@ -81,6 +100,11 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+
+        devicePolicyManager=(DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+        componentName = new ComponentName(this, MyAdmin.class);
+        setUpKioskMode();
+        devicePolicyManager.lockNow();
     }
 
     private void initVars() {
@@ -95,6 +119,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         submit.setOnClickListener(this);
         back=findViewById(R.id.backBtn);
         back.setOnClickListener(this);
+        back.setVisibility(View.INVISIBLE);
     }
 
     private void updateImages() {
@@ -157,7 +182,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             handleSubmit();
         }
         else if(v==back)
-            finish();
+            startActivity(new Intent(this,MenuActivity.class));
         else {
             int id=v.getId();
             ImageView img =findViewById(id);
@@ -175,8 +200,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
     private void handleSubmit() {
         if(ValidateSelected()){
-            Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
-            finish();
+            kioskMode.lockUnlock(this,false);
+            this.finish();
         }
         else {
             if (!onFailShowPin) {
@@ -203,4 +228,41 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+
+    private void setUpKioskMode() {
+        if (!MySharedPreferences.isAppLaunched(this)) {
+            Log.d(TAG, "onCreate() locking the app first time");
+            kioskMode.lockUnlock(this, true);
+            MySharedPreferences.saveAppLaunched(this, true);
+        } else {
+            //check if app was locked
+            if (MySharedPreferences.isAppInKioskMode(this)) {
+                Log.d(TAG, "onCreate() locking the app");
+                kioskMode.lockUnlock(this, true);
+            }
+            kioskMode.lockUnlock(this,true);
+        }
+    }
+
+    public void askPermission() {
+        boolean active = devicePolicyManager.isAdminActive(componentName);
+        if (!active) {
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
+            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Need for fake lock screen");
+            startActivityForResult(intent, RESULT_ENABLE);
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!kioskMode.isLocked(this)) {
+            super.onBackPressed();
+        }
+    }
+
+
+
 }
+

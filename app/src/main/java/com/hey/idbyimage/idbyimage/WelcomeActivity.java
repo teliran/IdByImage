@@ -28,14 +28,15 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = null;
         if(v.getId()==R.id.nextbtn) {
             SharedPreferences pref = getSharedPreferences("imagePref", Context.MODE_PRIVATE);
-            if (pref.getAll().size() == CountImages())
+            if (pref.getAll().size() == CountImages()) {
                 intent = new Intent(this, MenuActivity.class);
-            else
+                startActivity(intent);
+                finish();
+            } else {
                 intent = new Intent(this, InstructionActivity.class);
-        }
-        if(intent!=null) {
-            startActivity(intent);
-            finish();
+                startActivity(intent);
+                finish();
+            }
         }
     }
 

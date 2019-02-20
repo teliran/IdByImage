@@ -204,6 +204,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         if (numOfPage == numOfImages / 2) {
             saveRatings();
             startActivity(new Intent(this,MenuActivity.class));
+            finish();
         }
         else{
             saveRatings();
