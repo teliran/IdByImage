@@ -10,6 +10,7 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
     private Button trybtn;
     private Button activatebtn;
     private Button settingsbtn;
+    private Button instructbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         trybtn=findViewById(R.id.trybtn);
         activatebtn=findViewById(R.id.activatebtn);
         settingsbtn=findViewById(R.id.settingsbtn);
+        instructbtn = findViewById(R.id.HelpBtn);
         trybtn.setOnClickListener(this);
         activatebtn.setOnClickListener(this);
         settingsbtn.setOnClickListener(this);
@@ -33,5 +35,9 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         else if(v==settingsbtn){
             startActivity(new Intent(this,SettingsActivity.class));
         }
+    }
+
+    private void popDialog(){
+        // didn't work well - redo
     }
 }
