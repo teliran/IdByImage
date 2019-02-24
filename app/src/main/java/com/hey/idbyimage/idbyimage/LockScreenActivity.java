@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,8 +99,16 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         back.setOnClickListener(this);
     }
 
+    /**
+     * HERE THE SHUFFLE ERROR SHOULD BE CAUGHT
+     */
     private void updateImages() {
-        List<Map.Entry<String, Integer>> imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
+        List<Map.Entry<String, Integer>> imagesEntry = null;
+        try {///here
+            imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
+        } catch (BadRatingDistributionException e) {///here
+            e.printStackTrace();
+        }
         ArrayList<String> images = new ArrayList<String>();
         for (Map.Entry<String, Integer> entry:imagesEntry) {
             images.add(entry.getKey());

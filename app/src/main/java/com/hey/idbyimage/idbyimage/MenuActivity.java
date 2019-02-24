@@ -1,6 +1,8 @@
 package com.hey.idbyimage.idbyimage;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +25,7 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         trybtn.setOnClickListener(this);
         activatebtn.setOnClickListener(this);
         settingsbtn.setOnClickListener(this);
+        instructbtn.setOnClickListener(this);
     }
 
     @Override
@@ -35,9 +38,22 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         else if(v==settingsbtn){
             startActivity(new Intent(this,SettingsActivity.class));
         }
+        else if (v==instructbtn){
+            popDialog();
+        }
     }
 
     private void popDialog(){
-        // didn't work well - redo
+        final AlertDialog.Builder ad = new AlertDialog.Builder(this);
+        ad.setTitle("Instructions");
+        ad.setMessage("These are some instructions");
+        ad.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        //ad.create();
+        ad.show();
     }
 }
