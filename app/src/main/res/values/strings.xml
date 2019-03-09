@@ -81,15 +81,22 @@
     <string name="numimages">Images to select:</string>
     <string name="numIterations">Screen Lock Iterations:</string>
     <string name="action_settings">action_settings</string>
+
     <string name="Number_of_images_screen">matrix_size</string>
     <string name="Number_of_images_in_lock_screen">Number of images in lock screen</string>
+    <string name="pref_num_images_3x3">9</string>
+    <string name="pref_num_images_2x3">6</string>
 
-    <string name="pref_num_images_3x3">3X3</string>
-    <string name="pref_num_images_2x3">2X3</string>
-    <string name="pref_num_images_to_select_3">3</string>
-    <string name="Number_selected_images">Number of images</string>
+    <string name="Number_selected_images">Number_of_images</string>
     <string name="Number_of_images_to_select">Number of images to select</string>
     <string name="pref_num_images_2">2</string>
     <string name="pref_num_images_3">3</string>
     <string name="pref_num_images_4">4</string>
+
+    <string name="Number_of_lock_screens">Number of lock screens</string>
+    <string name="Num_of_lock_screens">Num_lock_screens</string>
+
+    <string name="pref_num_of_screens_2">2</string>
+    <string name="pref_num_of_screens_3">3</string>
+    <string name="pref_num_of_screens_1">1</string>
 </resources>

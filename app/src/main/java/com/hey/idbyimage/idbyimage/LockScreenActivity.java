@@ -29,7 +29,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private boolean onFailShowPin;
     private int numOfImgs;
     private int imgsToSelect;
-    private String matrixSize;
+    private int numOfScreens;
 
     private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
@@ -73,11 +73,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setupSharedPreferences(sharedPreferences);
         loadMatrixSizeFromPreference(sharedPreferences);
-        loadNumOfimagesFromPreference(sharedPreferences);
-        //Check matrix scale- if 3x2:
-        numOfImgs=6;
-        //setContentView(R.layout.activity_lock_screen_3x2);
-        //else
+//        loadNumOfimagesFromPreference(sharedPreferences);
+
         setContentView(R.layout.activity_lock_screen_3x3);
         initVars();
 
@@ -98,7 +95,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
-        numOfImgs=9;
         updateImages();
 
         submit=findViewById(R.id.submit);
@@ -216,22 +212,41 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("matrix_size")) {
-            //Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+            Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
             loadMatrixSizeFromPreference(sharedPreferences);
-
         }
-        else if (key.equals("Number of images to select")){
+        else if (key.equals("Number_of_images")){
             loadNumOfimagesFromPreference(sharedPreferences);
-
-
+        }
+        else if (key.equals("Num_lock_screens")){
+            loadNumOfScreensFromPreference(sharedPreferences);
         }
     }
 
     private void loadMatrixSizeFromPreference(SharedPreferences sharedPreferences) {
-        this.matrixSize = sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3));
+        try {
+            this.numOfImgs = Integer.parseInt(sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+            Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","MATRIX_SIZE");
+        };
     }
 
     private void loadNumOfimagesFromPreference(SharedPreferences sharedPreferences) {
-        this.imgsToSelect=sharedPreferences.getInt(getString(R.string.Number_of_images_screen),R.string.pref_num_images_3);
+        try {
+            this.imgsToSelect = Integer.parseInt(sharedPreferences.getString(getString(R.string.Number_selected_images),getString(R.string.pref_num_images_3)));
+            Log.d("Images_To_Select",sharedPreferences.getString(getString(R.string.Number_selected_images),getString(R.string.pref_num_images_3)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","Images_To_Select");
+        };
+    }
+
+    private void loadNumOfScreensFromPreference(SharedPreferences sharedPreferences) {
+        try {
+            this.numOfScreens = Integer.parseInt(sharedPreferences.getString(getString(R.string.Num_of_lock_screens),getString(R.string.pref_num_of_screens_1)));
+            Log.d("Num_Of_Screens", sharedPreferences.getString(getString(R.string.Num_of_lock_screens),getString(R.string.pref_num_of_screens_1)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","Num_Of_Screens");
+        };
     }
 }
