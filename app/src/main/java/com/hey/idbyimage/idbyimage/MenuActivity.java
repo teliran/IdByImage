@@ -1,12 +1,15 @@
 package com.hey.idbyimage.idbyimage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MenuActivity extends AppCompatActivity implements  View.OnClickListener{
+public class MenuActivity extends AppCompatActivity implements  View.OnClickListener {
     private Button trybtn;
     private Button activatebtn;
     private Button settingsbtn;
@@ -21,6 +24,11 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         trybtn.setOnClickListener(this);
         activatebtn.setOnClickListener(this);
         settingsbtn.setOnClickListener(this);
+        setupSharedPreferences();
+    }
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -34,4 +42,5 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
             startActivity(new Intent(this,SettingsActivity.class));
         }
     }
+
 }

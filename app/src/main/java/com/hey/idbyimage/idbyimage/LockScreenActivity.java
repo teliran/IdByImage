@@ -1,29 +1,36 @@
 package com.hey.idbyimage.idbyimage;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.IDNA;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.view.MenuItem;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.InflaterOutputStream;
 
-public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
+public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private SharedPreferences imagePref;
     private Button submit,back;
     private ArrayList<String> selected;
     private boolean onFailShowPin;
     private int numOfImgs;
-    private int imgsToSelect = 3;
+    private int imgsToSelect;
+    private int numOfScreens;
+
     private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
 
@@ -63,15 +70,11 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences settingsPref=getSharedPreferences("settingsPref", Context.MODE_PRIVATE);
-        int a =settingsPref.getInt("numOfImagesToShow",0);
-        int b =settingsPref.getInt("numOfImagesToSelect",0);
-        Toast.makeText(this,"To show: "+a+" To Select: "+b,Toast.LENGTH_SHORT).show();
-        //Check matrix scale- if 3x2:
-        //numOfImgs=6;
-        //this.imgsToSelect=2
-        //setContentView(R.layout.activity_lock_screen_3x2);
-        //else
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setupSharedPreferences(sharedPreferences);
+        loadMatrixSizeFromPreference(sharedPreferences);
+//        loadNumOfimagesFromPreference(sharedPreferences);
+
         setContentView(R.layout.activity_lock_screen_3x3);
         initVars();
 
@@ -83,12 +86,15 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void setupSharedPreferences(SharedPreferences sharedPreferences) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
     private void initVars() {
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
-        numOfImgs=9;
         updateImages();
 
         submit=findViewById(R.id.submit);
@@ -202,4 +208,45 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("matrix_size")) {
+            Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+            loadMatrixSizeFromPreference(sharedPreferences);
+        }
+        else if (key.equals("Number_of_images")){
+            loadNumOfimagesFromPreference(sharedPreferences);
+        }
+        else if (key.equals("Num_lock_screens")){
+            loadNumOfScreensFromPreference(sharedPreferences);
+        }
+    }
+
+    private void loadMatrixSizeFromPreference(SharedPreferences sharedPreferences) {
+        try {
+            this.numOfImgs = Integer.parseInt(sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+            Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","MATRIX_SIZE");
+        };
+    }
+
+    private void loadNumOfimagesFromPreference(SharedPreferences sharedPreferences) {
+        try {
+            this.imgsToSelect = Integer.parseInt(sharedPreferences.getString(getString(R.string.Number_selected_images),getString(R.string.pref_num_images_3)));
+            Log.d("Images_To_Select",sharedPreferences.getString(getString(R.string.Number_selected_images),getString(R.string.pref_num_images_3)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","Images_To_Select");
+        };
+    }
+
+    private void loadNumOfScreensFromPreference(SharedPreferences sharedPreferences) {
+        try {
+            this.numOfScreens = Integer.parseInt(sharedPreferences.getString(getString(R.string.Num_of_lock_screens),getString(R.string.pref_num_of_screens_1)));
+            Log.d("Num_Of_Screens", sharedPreferences.getString(getString(R.string.Num_of_lock_screens),getString(R.string.pref_num_of_screens_1)));
+        } catch(NumberFormatException nfe){
+            Log.e("Cannot Parse String","Num_Of_Screens");
+        };
+    }
 }
