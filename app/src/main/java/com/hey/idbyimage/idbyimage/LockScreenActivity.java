@@ -1,28 +1,36 @@
 package com.hey.idbyimage.idbyimage;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.IDNA;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.view.MenuItem;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.InflaterOutputStream;
 
-public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener {
+public class LockScreenActivity extends AppCompatActivity implements View.OnClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private SharedPreferences imagePref;
     private Button submit,back;
     private ArrayList<String> selected;
     private boolean onFailShowPin;
     private int numOfImgs;
-    private int imgsToSelect = 3;
+    private int imgsToSelect;
+    private String matrixSize;
+
     private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
 
@@ -62,9 +70,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setupSharedPreferences(sharedPreferences);
+        loadMatrixSizeFromPreference(sharedPreferences);
+        loadNumOfimagesFromPreference(sharedPreferences);
         //Check matrix scale- if 3x2:
-        //numOfImgs=6;
-        //this.imgsToSelect=2
+        numOfImgs=6;
         //setContentView(R.layout.activity_lock_screen_3x2);
         //else
         setContentView(R.layout.activity_lock_screen_3x3);
@@ -76,6 +87,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+    }
+
+    private void setupSharedPreferences(SharedPreferences sharedPreferences) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     private void initVars() {
@@ -197,4 +212,26 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("matrix_size")) {
+            //Log.d("MATRIX_SIZE",sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3)));
+            loadMatrixSizeFromPreference(sharedPreferences);
+
+        }
+        else if (key.equals("Number of images to select")){
+            loadNumOfimagesFromPreference(sharedPreferences);
+
+            
+        }
+    }
+
+    private void loadMatrixSizeFromPreference(SharedPreferences sharedPreferences) {
+        this.matrixSize = sharedPreferences.getString(getString(R.string.Number_of_images_screen),getString(R.string.pref_num_images_3x3));
+    }
+
+    private void loadNumOfimagesFromPreference(SharedPreferences sharedPreferences) {
+        this.imgsToSelect=sharedPreferences.getInt(getString(R.string.Number_of_images_screen),R.string.pref_num_images_3);
+    }
 }

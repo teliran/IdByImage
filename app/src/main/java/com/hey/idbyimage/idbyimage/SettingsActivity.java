@@ -4,12 +4,10 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+public class SettingsActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +19,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        setupSharedPreferences();
     }
 
     @Override
@@ -32,27 +28,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             NavUtils.navigateUpFromSameTask(this);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setupSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("pref_num_images_3x3")) {
-            Log.i("Setting","3X3");
-        }
-        Log.i("Setting","3X2");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }
 
