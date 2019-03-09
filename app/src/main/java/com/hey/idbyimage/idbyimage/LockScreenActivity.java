@@ -223,7 +223,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         else if (key.equals("Number of images to select")){
             loadNumOfimagesFromPreference(sharedPreferences);
 
-            
+
         }
     }
 

@@ -70,6 +70,33 @@ public class LockScreenActivityTest {
     }
 
     @Test
+    public void testSelectWrong(){
+        HashMap<String,Integer> ratings = lActivity.getAllRatingsMap();
+        int numToSelect = lActivity.getImgsToSelect();
+        int[] ratingsArr = new int[images.length];
+        for(int i=0;i<ratingsArr.length;i++){
+            ratingsArr[i]=ratings.get((String)images[i].getTag());
+        }
+        ArrayList<String> selectHighest = new ArrayList<String>();
+        for (int j=0;j<numToSelect+1;j++) {
+            int maxIndex = 0, maxVal = 0;
+            for (int i = 0; i < ratingsArr.length; i++) {
+                if (ratingsArr[i] > maxVal) {
+                    maxVal = ratingsArr[i];
+                    maxIndex = i;
+                }
+            }
+
+            if (j!=0) {
+                selectHighest.add((String) images[maxIndex].getTag());
+            }
+            ratingsArr[maxIndex] = 0;
+        }
+        lActivity.setSelected(selectHighest);
+        assertFalse(lActivity.ValidateSelected());
+    }
+
+    @Test
     public void testSelectLess(){
         assertFalse(lActivity.isOnFailShowPin());
         try {
