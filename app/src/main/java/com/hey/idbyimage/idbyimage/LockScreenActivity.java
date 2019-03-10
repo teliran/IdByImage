@@ -30,6 +30,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private int numOfImgs;
     private int imgsToSelect;
     private int numOfScreens;
+    private int currentScreenNum;
 
     private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
@@ -73,10 +74,14 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setupSharedPreferences(sharedPreferences);
         loadMatrixSizeFromPreference(sharedPreferences);
-//        loadNumOfimagesFromPreference(sharedPreferences);
-
-        setContentView(R.layout.activity_lock_screen_3x3);
+        loadNumOfimagesFromPreference(sharedPreferences);
+        loadNumOfScreensFromPreference(sharedPreferences);
+        if(numOfImgs==9)
+            setContentView(R.layout.activity_lock_screen_3x3);
+        else
+            setContentView(R.layout.activity_lock_screen_3x2);
         initVars();
+
 
         for (int i=0;i<numOfImgs;i++){
             int numOfImg = i+1;
@@ -95,6 +100,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
+        currentScreenNum=1;
         updateImages();
 
         submit=findViewById(R.id.submit);
@@ -181,7 +187,15 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
     private void handleSubmit() {
         if(ValidateSelected()){
-            Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
+            if (currentScreenNum==numOfScreens)
+                Toast.makeText(this,"Success & finished",Toast.LENGTH_SHORT).show();
+            else
+            {
+                selected = new ArrayList<String>();
+                currentScreenNum++;
+                updateImages();
+                Toast.makeText(this,"Success but not finished",Toast.LENGTH_SHORT).show();
+            }
         }
         else {
             if (!onFailShowPin) {
