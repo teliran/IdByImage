@@ -28,13 +28,16 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = null;
         if(v.getId()==R.id.nextbtn) {
             SharedPreferences pref = getSharedPreferences("imagePref", Context.MODE_PRIVATE);
-            if (pref.getAll().size() == CountImages())
+            if (pref.getAll().size() == CountImages()) {
                 intent = new Intent(this, MenuActivity.class);
-            else
+                startActivity(intent);
+                finish();
+            } else {
                 intent = new Intent(this, InstructionActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
-        if(intent!=null)
-            startActivity(intent);
     }
 
     private int CountImages() {
@@ -46,10 +49,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     drawables.add(field.getInt(null));
                 } catch (IllegalAccessException e) {
-                    Toast.makeText(this,"Problem counting images",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WelcomeActivity.this,"Problem counting images",Toast.LENGTH_SHORT).show();
                 }
             }
         }
-        return drawables.size();
+        return drawables.size()-1;
     }
 }
