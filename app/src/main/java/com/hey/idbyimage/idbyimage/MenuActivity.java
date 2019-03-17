@@ -50,8 +50,9 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         else if(v==activatebtn){
             if(!askPermission()){
                 startActivity(new Intent(this, LockScreenKioskActivity.class));
-                finish();
+
             }
+            finish();
 
         }
         else if(v==settingsbtn){

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 
@@ -102,10 +103,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         currentScreenNum=1;
         updateImages();
 
+        TextView titleText = findViewById(R.id.titleText);
         submit=findViewById(R.id.submit);
         submit.setOnClickListener(this);
         back=findViewById(R.id.backBtn);
         back.setOnClickListener(this);
+        titleText.setText("Select "+this.imgsToSelect+" Images");
     }
 
     private void updateImages() {
