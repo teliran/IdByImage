@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".WelcomeActivity" android:clearTaskOnLaunch="true">
+        <activity
+            android:name=".WelcomeActivity"
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,17 +38,23 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name=".MenuActivity"  />
-        <activity android:name=".PinLockActivity"></activity>
-        <activity
-            android:name=".SettingsActivity" />
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".PinLockActivity" />
+        <activity android:name=".SettingsActivity" />
 
-        <receiver android:name="MyAdmin" android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data android:name="android.app.device_admin" android:resource="@xml/policies"/>
+        <receiver
+            android:name=".MyAdmin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/policies" />
+
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".PinLockScreenActivity"></activity>
     </application>
 
 </manifest>

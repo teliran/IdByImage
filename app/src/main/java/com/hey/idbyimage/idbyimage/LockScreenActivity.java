@@ -206,6 +206,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
                 currentScreenNum++;
                 screenIndic.setText(currentScreenNum+"/"+numOfScreens);
                 updateImages();
+                onFailShowPin=false;
                 Toast.makeText(this,"Success but not finished",Toast.LENGTH_SHORT).show();
             }
         }
@@ -213,12 +214,13 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             if (!onFailShowPin) {
                 selected = new ArrayList<String>();
                 updateImages();
-                //onFailShowPin=true;
+                onFailShowPin=true;
                 Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show();
             }
             else{
-                //Move to pin lock screen
-                //TODO
+                Intent pinLock = new Intent(this,PinLockScreenActivity.class);
+                startActivity(pinLock);
+                finish();
             }
         }
     }

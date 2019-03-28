@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class PinLockActivity extends AppCompatActivity implements View.OnClickListener{
-    SharedPreferences pinPref;
+    private SharedPreferences pinPref;
 
     private Button nextBtn,backBtn;
     private EditText firstPin, secondPin, thirdPin, fourthPin;
@@ -150,7 +150,7 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
 
     private void init(){
         pin = "";
-        nextBtn =  findViewById(R.id.nextBtn);
+        nextBtn =  findViewById(R.id.submitBtn);
         nextBtn.setEnabled(false);
         nextBtn.setOnClickListener(this);
         firstPin =  findViewById(R.id.first_pin);

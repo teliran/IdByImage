@@ -232,8 +232,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 onFailShowPin=true;
             }
             else{
-                //Move to pin lock screen
-                //TODO
+                Intent pinLock = new Intent(this,PinLockScreenActivity.class);
+                startActivity(pinLock);
+                finish();
             }
         }
     }

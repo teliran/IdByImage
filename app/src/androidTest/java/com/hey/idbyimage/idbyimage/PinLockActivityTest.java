@@ -27,7 +27,7 @@ public class PinLockActivityTest {
         pin[1]=pActivity.findViewById(R.id.second_pin);
         pin[2]=pActivity.findViewById(R.id.third_pin);
         pin[3]=pActivity.findViewById(R.id.fourth_pin);
-        next=pActivity.findViewById(R.id.nextBtn);
+        next=pActivity.findViewById(R.id.submitBtn);
         back=pActivity.findViewById(R.id.backBtn);
     }
 
