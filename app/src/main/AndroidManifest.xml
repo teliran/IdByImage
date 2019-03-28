@@ -28,17 +28,15 @@
         <activity android:name=".InstructionActivity" />
         <activity android:name=".SetupActivity" />
         <activity android:name=".LockScreenActivity" />
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".PinLockActivity"></activity>
         <activity
             android:name=".LockScreenKioskActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <!--
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-            -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MenuActivity"/>
         </activity>
         <activity android:name=".MenuActivity" />
         <activity android:name=".PinLockActivity" />
