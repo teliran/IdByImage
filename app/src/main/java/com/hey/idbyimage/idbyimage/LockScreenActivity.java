@@ -27,6 +27,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private SharedPreferences imagePref;
     private Button submit,back;
     private ArrayList<String> selected;
+    private TextView screenIndic;
     private boolean onFailShowPin;
     private int numOfImgs;
     private int imgsToSelect;
@@ -109,6 +110,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         back=findViewById(R.id.backBtn);
         back.setOnClickListener(this);
         titleText.setText("Select "+this.imgsToSelect+" Images");
+        screenIndic=findViewById(R.id.ScreenNumIndic);
+        screenIndic.setText(currentScreenNum+"/"+numOfScreens);
     }
 
     private void updateImages() {
@@ -197,6 +200,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             {
                 selected = new ArrayList<String>();
                 currentScreenNum++;
+                screenIndic.setText(currentScreenNum+"/"+numOfScreens);
                 updateImages();
                 Toast.makeText(this,"Success but not finished",Toast.LENGTH_SHORT).show();
             }
@@ -205,7 +209,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             if (!onFailShowPin) {
                 selected = new ArrayList<String>();
                 updateImages();
-                onFailShowPin=true;
+                //onFailShowPin=true;
+                Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show();
             }
             else{
                 //Move to pin lock screen

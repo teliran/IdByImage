@@ -57,6 +57,7 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         }
         else if(v==settingsbtn){
             startActivity(new Intent(this,SettingsActivity.class));
+            finish();
         }
 
         else if(v==removePermission){

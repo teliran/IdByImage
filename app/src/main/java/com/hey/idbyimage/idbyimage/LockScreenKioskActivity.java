@@ -37,6 +37,8 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     private int imgsToSelect;
     private int numOfScreens;
     private int currentScreenNum;
+    private TextView screenIndic;
+
     private ShuffleAlgorithm shuffleAlgorithm;
 
 
@@ -125,9 +127,11 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         submit=findViewById(R.id.submit);
         submit.setOnClickListener(this);
         back=findViewById(R.id.backBtn);
-        back.setOnClickListener(this);
+        back.setVisibility(View.INVISIBLE);
         String headerText = "Select "+this.imgsToSelect+" Images";
         titleText.setText(headerText);
+        screenIndic=findViewById(R.id.ScreenNumIndic);
+        screenIndic.setText(currentScreenNum+"/"+numOfScreens);
     }
 
     private void updateImages() {
@@ -215,6 +219,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 selected = new ArrayList<String>();
                 currentScreenNum++;
                 updateImages();
+                screenIndic.setText(currentScreenNum+"/"+numOfScreens);
             }
         }
         else {
@@ -308,6 +313,13 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             startActivityForResult(intent, RESULT_ENABLE);
         }
 
+    }
+    @Override
+    public void onDestroy(){
+        if (!kioskMode.isLocked(this)) {
+            super.onDestroy();
+            this.finish();
+        }
     }
 
     @Override
