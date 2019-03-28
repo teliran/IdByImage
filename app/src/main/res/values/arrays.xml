@@ -22,4 +22,10 @@
         <item>@string/pref_num_images_4</item>
     </array>
 
+    <array name="pref_num_screens_lables">
+        <item>@string/pref_num_of_screens_1</item>
+        <item>@string/pref_num_of_screens_2</item>
+        <item>@string/pref_num_of_screens_3</item>
+    </array>
+
 </resources>

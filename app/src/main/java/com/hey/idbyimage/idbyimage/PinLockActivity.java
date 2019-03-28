@@ -111,6 +111,7 @@ public class PinLockActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (intent!= null){
             startActivity(intent);
+            finish();
         }
     }
 
