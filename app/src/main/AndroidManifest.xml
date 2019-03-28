@@ -54,7 +54,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".PinLockScreenActivity"></activity>
+        <activity android:name=".PinLockScreenActivity" />
+        <activity android:name=".UserData"></activity>
     </application>
 
 </manifest>
