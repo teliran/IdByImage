@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -104,6 +105,8 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.BLACK);
 
         devicePolicyManager=(DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         componentName = new ComponentName(this, MyAdmin.class);
@@ -314,12 +317,16 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         }
 
     }
+
+
     @Override
-    public void onDestroy(){
-        if (!kioskMode.isLocked(this)) {
-            super.onDestroy();
-            this.finish();
-        }
+    public void onResume(){
+        super.onResume();
+        selected = new ArrayList<String>();
+        currentScreenNum=1;
+        onFailShowPin=false;
+        updateImages();
+        screenIndic.setText(currentScreenNum+"/"+numOfScreens);
     }
 
     @Override

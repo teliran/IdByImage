@@ -3,6 +3,7 @@ package com.hey.idbyimage.idbyimage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -44,7 +45,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setButtonListener();
         setTextForRatings();
         loadSetupScreen();
-
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.BLACK);
     }
 
     private void setButtonListener() {

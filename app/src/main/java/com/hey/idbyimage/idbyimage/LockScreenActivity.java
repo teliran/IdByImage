@@ -4,6 +4,7 @@ package com.hey.idbyimage.idbyimage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.icu.text.IDNA;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -90,6 +91,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.BLACK);
     }
 
     private void setupSharedPreferences(SharedPreferences sharedPreferences) {
