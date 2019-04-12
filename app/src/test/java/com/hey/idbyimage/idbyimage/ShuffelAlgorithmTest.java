@@ -1,5 +1,9 @@
 package com.hey.idbyimage.idbyimage;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
+
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +56,22 @@ public class ShuffelAlgorithmTest {
         }
         assertTrue(shuffleAlgo.getHighRated().size()==imageCounter);
         assertTrue(allImages.get(image)==shuffleAlgo.getHighRated().get(image));
+        setExtremeRatings(allImages);
+        shuffleAlgo = new ShuffleAlgorithm(allImages);
+        avg = shuffleAlgo.getAvg();
+        dev = shuffleAlgo.getDev();
+        imageCounter = 0;
+        image = "";
+        for (String pic : allImages.keySet()){
+            if (allImages.get(pic) > avg+dev){
+                imageCounter++;
+                if (image.length()==0){
+                    image = pic;
+                }
+            }
+        }
+        assertTrue(shuffleAlgo.getHighRated().size()==imageCounter);
+        assertTrue(allImages.get(image)==shuffleAlgo.getHighRated().get(image));
     }
 
     @Test
@@ -68,11 +88,33 @@ public class ShuffelAlgorithmTest {
         }
         assertTrue(shuffleAlgo.getLowRated().size()==imageCounter);
         assertTrue(allImages.get(image)==shuffleAlgo.getLowRated().get(image));
+
+        setExtremeRatings(allImages);
+        shuffleAlgo = new ShuffleAlgorithm(allImages);
+        avg = shuffleAlgo.getAvg();
+        dev = shuffleAlgo.getDev();
+        imageCounter = 0;
+        image = "";
+        for (String pic : allImages.keySet()){
+            if (allImages.get(pic) <= avg+dev){
+                imageCounter++;
+                if (image.length()==0){
+                    image = pic;
+                }
+            }
+        }
+        assertTrue(shuffleAlgo.getLowRated().size()==imageCounter);
+        assertTrue(allImages.get(image)==shuffleAlgo.getLowRated().get(image));
     }
 
     @Test
     public void getCorrectAnswer() {
-        shuffleAlgo.shuffle(3, 6);
+        try {
+            shuffleAlgo.shuffle(3, 6);
+        } catch (BadRatingDistributionException e) {
+            Assert.fail();
+            e.printStackTrace();
+        }
         List<Map.Entry<String, Integer>> correctAns = shuffleAlgo.getCorrectAnswer();
         assertTrue(correctAns.size()==3);
         for (Map.Entry<String, Integer> entry: correctAns) {
@@ -84,7 +126,13 @@ public class ShuffelAlgorithmTest {
 
     @Test
     public void shuffle() {
-        List<Map.Entry<String, Integer>> shuffle = shuffleAlgo.shuffle(3, 6);
+        List<Map.Entry<String, Integer>> shuffle = null;
+        try {
+            shuffle = shuffleAlgo.shuffle(3, 6);
+        } catch (BadRatingDistributionException e) {
+            Assert.fail();
+            e.printStackTrace();
+        }
 
         assertTrue(shuffle.size() == 9);
         for (Map.Entry<String, Integer> entry: shuffle){
@@ -99,7 +147,7 @@ public class ShuffelAlgorithmTest {
     }
 
     private void setExtremeRatings(HashMap<String, Integer> m){
-        for (int i=0; i<m.size(); i++){
+        for (int i=1; i<51; i++){
             m.put("p"+i, 1);
         }
     }

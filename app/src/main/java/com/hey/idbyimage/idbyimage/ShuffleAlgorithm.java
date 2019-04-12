@@ -1,5 +1,7 @@
 package com.hey.idbyimage.idbyimage;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -105,8 +107,11 @@ public class ShuffleAlgorithm {
         return list;
     }
 
-    private HashMap<String, Integer> selectNRandElements(HashMap<String, Integer> v, int n){
+    private HashMap<String, Integer> selectNRandElements(HashMap<String, Integer> v, int n) throws BadRatingDistributionException {
         HashMap<String, Integer> mV = new HashMap<>();
+        if (v.size() < n){
+           throw new BadRatingDistributionException();
+        }
         if (v.isEmpty())
             return mV;
         List<Map.Entry<String, Integer>> vlist = getMapList(v);
@@ -129,7 +134,7 @@ public class ShuffleAlgorithm {
      * @param low - - number of low rated to be chosen
      * @return a map entry list: <image name, rating>, can extract data with entry accessors (getKey(), getValue())
      */
-    public List<Map.Entry<String, Integer>> shuffle( int high, int low){
+    public List<Map.Entry<String, Integer>> shuffle( int high, int low) throws BadRatingDistributionException {
         List<Map.Entry<String, Integer>> shuffledImages = new ArrayList<>();
         HashMap<String, Integer> highChosen = selectNRandElements(highRated, high);
         correctAnswer = getMapList(highChosen);
