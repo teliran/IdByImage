@@ -15,8 +15,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
@@ -211,6 +214,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
             saveRatings();
+            ShuffleAlgorithm algo = new ShuffleAlgorithm(getAllRatingsMap());
+            try {
+                    algo.shuffle(2, 7);
+                    algo.shuffle(4, 5);
+            }catch (BadRatingDistributionException e){
+                Toast.makeText(this,"Rating need to be spread",Toast.LENGTH_LONG).show();
+                return;
+            }
+
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
@@ -219,6 +231,20 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             numOfPage++;
             loadSetupScreen();
         }
+    }
+
+    public HashMap<String, Integer> getAllRatingsMap(){
+        HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
+        int loopIndex = CountImages();
+        for (int i=1;i<=loopIndex;i++){
+            String imgName=getImageFileName(i);
+            int ratingofImage=imagePref.getInt(imgName,0);
+            if(ratingofImage>0)
+                imageRatings.put(imgName,ratingofImage);
+            else
+                break;
+        }
+        return imageRatings;
     }
 
     private void popDialog(){

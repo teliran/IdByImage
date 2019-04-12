@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 import com.hey.idbyimage.idbyimage.Utils.BaseActivity;
 import com.hey.idbyimage.idbyimage.Utils.KioskMode;
 import com.hey.idbyimage.idbyimage.Utils.MySharedPreferences;
@@ -138,12 +139,17 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     }
 
     private void updateImages() {
-        List<Map.Entry<String, Integer>> imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
-        ArrayList<String> images = new ArrayList<String>();
-        for (Map.Entry<String, Integer> entry:imagesEntry) {
-            images.add(entry.getKey());
+        try {
+            List<Map.Entry<String, Integer>> imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect, numOfImgs - imgsToSelect);
+            ArrayList<String> images = new ArrayList<String>();
+            for (Map.Entry<String, Integer> entry:imagesEntry) {
+                images.add(entry.getKey());
+            }
+            updateImageView(images);
+        }catch (BadRatingDistributionException e){
+            Toast.makeText(this,"This should not happen",Toast.LENGTH_SHORT).show();
         }
-        updateImageView(images);
+
     }
 
     private void updateImageView(ArrayList<String> images) {

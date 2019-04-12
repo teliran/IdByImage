@@ -8,37 +8,38 @@
 
     <Button
         android:id="@+id/trybtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
         android:text="Try it Now"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/activatebtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
         android:text="Enable"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.474"
+        app:layout_constraintHorizontal_bias="0.451"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trybtn" />
 
     <Button
         android:id="@+id/settingsbtn"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Settings"
@@ -52,7 +53,7 @@
 
     <Button
         android:id="@+id/removePerm"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="60dp"
@@ -64,19 +65,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activatebtn" />
 
-    <Button
-        android:id="@+id/HelpBtn"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Help"
-        app:layout_constraintBottom_toTopOf="@+id/trybtn"
-        app:layout_constraintEnd_toStartOf="@+id/trybtn"
-        app:layout_constraintHorizontal_bias="0.285"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.205" />
 </android.support.constraint.ConstraintLayout>
