@@ -1,5 +1,7 @@
 package com.hey.idbyimage.idbyimage.Utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,6 +16,7 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * DataCollector - Single Object intended to collect the user's data,
@@ -25,12 +28,13 @@ public class DataCollector {
     private static DataCollector dataCollector = new DataCollector();
     private boolean serverStatus;
     private HashMap<String, Integer> allImagesRatings;
-
-
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     private DataCollector(){
         this.serverStatus = checkServerStatus();
         this.allImagesRatings = new HashMap<>();
+
     }
 
     public static DataCollector getDataCollectorInstance(){
@@ -161,11 +165,48 @@ public class DataCollector {
         return userJson;
     }
 
-    private String getCurrentTimestamp() {
+    private JSONObject getActionsJsonObject(ActionObject actionObject){
+        JSONObject actionJson = new JSONObject();
+        try {
+            actionJson.put("userId", actionObject.getUserId());
+            actionJson.put("sessionId", actionObject.getSessionId());
+            actionJson.put("timestamp", actionObject.getTimeStamp());
+            actionJson.put("total_screens", actionObject.getTotalScreens());
+            actionJson.put("screen_order", actionObject.getScreenOrder());
+            actionJson.put("time_to_pass", actionObject.getTimeToPass());
+            actionJson.put("success", actionObject.isSuccess());
+            actionJson.put("selected_images", actionObject.getSelected());
+            actionJson.put("shown_images", actionObject.getShown());
+            actionJson.put("top_rated_images", actionObject.getTopRated());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return actionJson;
+    }
+
+    public String getCurrentTimestamp() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String stringTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(timestamp);
         Log.i("Timestamp",stringTime );
         return stringTime;
+    }
+
+    //still waiting
+    public synchronized String id(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.commit();
+            }
+        }
+        return uniqueID;
     }
 
 

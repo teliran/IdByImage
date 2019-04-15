@@ -1,5 +1,9 @@
 package com.hey.idbyimage.idbyimage.Utils;
 
+
+import android.provider.Settings;
+import android.support.v7.app.AppCompatActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -74,4 +78,16 @@ public class DataCollectorTest {
         boolean ans = dc.sendUserDataToServer(randUser, randAge, "TEST_GENDER");
         assertTrue(ans);
     }
+
+   /* @Test
+    public void testGenerateUniqueID() {
+        class TestActivity extends AppCompatActivity {
+        }
+        TestActivity testClass = new TestActivity();
+
+        DataCollector dc = DataCollector.getDataCollectorInstance();
+        String id = dc.id(testClass);
+        System.out.println(id);
+        assertTrue(true);
+    }*/
 }
