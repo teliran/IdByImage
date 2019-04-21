@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,8 +15,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.DataCollector;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
@@ -25,6 +29,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private SeekBar rating1,rating2;
     private ImageView image1,image2;
     private TextView indicator,rating1prog,rating2prog;
+    DataCollector dc;
+
 
     public int getNumOfImages() {
         return numOfImages;
@@ -42,6 +48,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_setup);
         numOfImages=CountImages();
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
+        dc = DataCollector.getDataCollectorInstance();
         initElements();
         setButtonListener();
         setTextForRatings();
@@ -209,6 +216,25 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
             saveRatings();
+            //-----------Data Collecting---------------
+            dc.setImageRatingsData(getAllRatingsMap());
+            final String id = dc.id(this);
+            Log.i("UNIQUE ID: ", id);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    dc.sendAllUserRatingsToServer(id);
+                }
+            });
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+            //dc.sendAllUserRatingsToServer(id);
+            try {
+                Thread.currentThread().join(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //-----------End of Data Collecting------------
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
@@ -231,6 +257,20 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         });
         //ad.create();
         ad.show();
+    }
+
+    private HashMap<String, Integer> getAllRatingsMap(){
+        HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
+        int loopIndex = CountImages();
+        for (int i=1;i<=loopIndex;i++){
+            String imgName=getImageFileName(i);
+            int ratingofImage=imagePref.getInt(imgName,0);
+            if(ratingofImage>0)
+                imageRatings.put(imgName,ratingofImage);
+            else
+                break;
+        }
+        return imageRatings;
     }
 
 }

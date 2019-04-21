@@ -2,6 +2,8 @@ package com.hey.idbyimage.idbyimage.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -17,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * DataCollector - Single Object intended to collect the user's data,
@@ -25,47 +28,61 @@ import java.util.UUID;
 public class DataCollector {
 
     private static  final String SERVER_URL = "http://132.72.23.63:3001";
-    private static DataCollector dataCollector = new DataCollector();
-    private boolean serverStatus;
+    private static DataCollector dataCollector = null;
+    private int serverStatus;
+    private boolean queryResp;
     private HashMap<String, Integer> allImagesRatings;
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     private DataCollector(){
-        this.serverStatus = checkServerStatus();
+        checkServerStatus();
+        try {
+            Thread.currentThread().join(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         this.allImagesRatings = new HashMap<>();
 
     }
 
     public static DataCollector getDataCollectorInstance(){
+        if (dataCollector == null){
+            dataCollector = new DataCollector();
+        }
         return  dataCollector;
     }
 
-    private boolean checkServerStatus(){
+    public void checkServerStatus(){
         //Create a URL object holding our url : SERVER_URL+"/healthcheck"
-        try {
-            URL myUrl = new URL(SERVER_URL+"/healthcheck");
-            //Create a connection
-            HttpURLConnection connection = (HttpURLConnection)
-                    myUrl.openConnection();
-            //Set methods and timeouts
-            connection.setRequestMethod("GET");
-            connection.setReadTimeout(15000);
-            connection.setConnectTimeout(15000);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL myUrl = new URL(SERVER_URL+"/healthcheck");
+                    //Create a connection
+                    HttpURLConnection connection = (HttpURLConnection)
+                            myUrl.openConnection();
+                    //Set methods and timeouts
+                    connection.setRequestMethod("GET");
+                    connection.setReadTimeout(15000);
+                    connection.setConnectTimeout(15000);
 
-            //Connect to our url
-            connection.connect();
-            if(connection.getResponseCode() == 200) {
-                return true;
+                    //Connect to our url
+                    connection.connect();
+                    serverStatus = connection.getResponseCode();
+                }catch(Exception e){
+                    Log.e("ERROR", e.getMessage());
+                }
             }
-            return false;
-        }catch(Exception e){
-            //String s = e.getMessage();
-            return false;
-        }
+        });
+        thread.setName("Check connectivity");
+        thread.setPriority(Thread.MAX_PRIORITY);
+        thread.start();
+
     }
 
-    public boolean getServerStatus(){
+    public int getServerStatus(){
         return this.serverStatus;
     }
 
@@ -74,7 +91,7 @@ public class DataCollector {
     }
 
     public boolean sendAllUserRatingsToServer(String userID){
-        if (!serverStatus){
+        if (serverStatus!=200){
             return false;
         }
         for (Map.Entry<String, Integer> imageRatingEntry: allImagesRatings.entrySet()){
@@ -87,7 +104,7 @@ public class DataCollector {
     }
 
     public boolean sendUserDataToServer(String userID, String age, String gender){
-        if (!serverStatus){
+        if (serverStatus!=200){
             return false;
         }
         JSONObject userJson = getUserJsonObject(userID, age, gender);
@@ -97,43 +114,51 @@ public class DataCollector {
         return true;
     }
 
-    public boolean sendDataToServer(JSONObject jsonObj, String urlPrefix){
-        if (!serverStatus){
+    public boolean sendDataToServer(final JSONObject jsonObj, final String urlPrefix){
+        if (serverStatus!=200){
             return false;
         }
-        String url = SERVER_URL+urlPrefix;
-        try {
-            URL myUrl = new URL(url);
-            //DataInputStream input;
-            HttpURLConnection connection = (HttpURLConnection)
-                    myUrl.openConnection();
-            connection.setConnectTimeout(15000);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(false);
-            connection.setRequestProperty("Content-Type","application/json;charset=UTF-8");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.connect();
-            Log.i("JSON", jsonObj.toString());
-            DataOutputStream printout = new DataOutputStream((connection.getOutputStream()));
-            printout.writeBytes(jsonObj.toString());
-            printout.flush();
-            printout.close();
-            Log.i("STATUS", String.valueOf(connection.getResponseCode()));
-            Log.i("MSG" , connection.getResponseMessage());
+       // Thread thread = new Thread(new Runnable() {
+          //  @Override
+          //  public void run() {
+                String url = SERVER_URL+urlPrefix;
+                try {
+                    URL myUrl = new URL(url);
+                    //DataInputStream input;
+                    HttpURLConnection connection = (HttpURLConnection)
+                            myUrl.openConnection();
+                    connection.setConnectTimeout(15000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    connection.setUseCaches(false);
+                    connection.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+                    connection.setRequestProperty("Accept", "application/json");
+                    connection.connect();
+                    //Log.i("JSON", jsonObj.toString());
+                    DataOutputStream printout = new DataOutputStream((connection.getOutputStream()));
+                    printout.writeBytes(jsonObj.toString());
+                    printout.flush();
+                    printout.close();
+                    //Log.i("STATUS", String.valueOf(connection.getResponseCode()));
+                    //Log.i("MSG" , connection.getResponseMessage());
 
-            connection.disconnect();
-            int resp = connection.getResponseCode();
-            if (connection.getResponseCode() == 200){
-                return true;
-            }else{
-                return false;
-            }
-
-        }catch (Exception e){
-            Log.e("ERROR send data:", e.getMessage());
-            return false;
-        }
+                    //int resp = connection.getResponseCode();
+                    if (connection.getResponseCode() == 200){
+                        queryResp =  true;
+                    }else{
+                        queryResp = false;
+                    }
+                    connection.disconnect();
+                }catch (Exception e){
+                    //Log.e("ERROR send data:", e.getMessage());
+                    queryResp = false;
+                    e.printStackTrace();
+                }
+            //}
+       // });
+       // thread.setName("sendData");
+       // thread.start();
+        return queryResp;
     }
 
 
@@ -208,6 +233,11 @@ public class DataCollector {
         }
         return uniqueID;
     }
+
+    public String generateUniqueSessionId(){
+        return UUID.randomUUID().toString().substring(0,8);
+    }
+
 
 
 }

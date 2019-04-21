@@ -11,6 +11,7 @@ import android.widget.Button;
 public class InstructionActivity extends AppCompatActivity implements View.OnClickListener{
     Button back;
     Button start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +20,7 @@ public class InstructionActivity extends AppCompatActivity implements View.OnCli
         start=findViewById(R.id.startbtn);
         start.setOnClickListener(this);
         back.setOnClickListener(this);
+
     }
 
     @Override

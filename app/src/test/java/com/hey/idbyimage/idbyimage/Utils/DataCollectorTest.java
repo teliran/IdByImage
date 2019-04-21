@@ -11,14 +11,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 public class DataCollectorTest {
-    DataCollector dc = DataCollector.getDataCollectorInstance();
+    DataCollector dc;
     @Before
     public void setUp() throws Exception {
-
+        dc = DataCollector.getDataCollectorInstance();
     }
 
     @After
@@ -28,7 +30,9 @@ public class DataCollectorTest {
     @Test
     public void testCheckConnectivity(){
         try {
-            assertTrue(dc.getServerStatus());
+            int status = dc.getServerStatus();
+            System.out.println(status);
+            assertTrue(status == 200);
         }catch(Exception e){
             //System.out.println(e.getMessage());
             fail(e.getMessage());
@@ -51,7 +55,7 @@ public class DataCollectorTest {
             e.printStackTrace();
             fail();
         }
-        DataCollector dc = DataCollector.getDataCollectorInstance();
+        //DataCollector dc = DataCollector.getDataCollectorInstance();
         boolean ans = dc.sendDataToServer(userImageRating, "/ratings");
         assertTrue(ans);
     }
@@ -63,7 +67,7 @@ public class DataCollectorTest {
         for (int i=1; i<51; i++){
             allImages.put("p"+i,(int)(Math.random()*10)+1);
         }
-        DataCollector dc = DataCollector.getDataCollectorInstance();
+        //DataCollector dc = DataCollector.getDataCollectorInstance();
         dc.setImageRatingsData(allImages);
         int randUser = (int)(Math.random()*10000000);
         boolean ans = dc.sendAllUserRatingsToServer("TestAllRatingsUser_"+randUser);
@@ -74,9 +78,22 @@ public class DataCollectorTest {
     public void testSendUserDataToServer() {
         String randUser = "UserDataTest_" + (int)(Math.random()*10000000);
         String randAge = (int)(Math.random()*100)+15 + "";
-        DataCollector dc = DataCollector.getDataCollectorInstance();
+        //DataCollector dc = DataCollector.getDataCollectorInstance();
         boolean ans = dc.sendUserDataToServer(randUser, randAge, "TEST_GENDER");
         assertTrue(ans);
+    }
+
+    @Test
+    public void generateUniqueSessionId() {
+        HashSet<String> ids = new HashSet<>();
+        for (int i = 0; i<2000; i++){
+            String sessionId = dc.generateUniqueSessionId();
+            if (ids.contains(sessionId)){
+                fail("SessionID should be unique");
+            }
+            ids.add(sessionId);
+        }
+        assertTrue(true);
     }
 
    /* @Test

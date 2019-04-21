@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.DataCollector;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_welcome);
         next = findViewById(R.id.nextbtn);
         next.setOnClickListener(this);
+        /*DataCollector dc = DataCollector.getDataCollectorInstance(); ///DEBUG
+        String id = dc.id(this);
+        System.out.println(id);*/
+
     }
 
     @Override

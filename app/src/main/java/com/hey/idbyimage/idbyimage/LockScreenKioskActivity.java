@@ -16,7 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.ActionObject;
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 import com.hey.idbyimage.idbyimage.Utils.BaseActivity;
+import com.hey.idbyimage.idbyimage.Utils.DataCollector;
 import com.hey.idbyimage.idbyimage.Utils.KioskMode;
 import com.hey.idbyimage.idbyimage.Utils.MySharedPreferences;
 
@@ -35,8 +38,13 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     private int numOfImgs;
     private int imgsToSelect = 3;
     private ShuffleAlgorithm shuffleAlgorithm;
-
-
+    //--------------------Data collecting -----------------------
+    private DataCollector dc = DataCollector.getDataCollectorInstance();
+    private final  String sessionId = dc.generateUniqueSessionId();
+    private ActionObject actionsData; //Data Object for storing the actions data
+    private long timeStart;
+    private long timeEnd;
+    //----------------------------------------------------------------------
     private static final String TAG = LockScreenKioskActivity.class.getSimpleName();
     final private FragmentManager fragmentManager = getSupportFragmentManager();
     public static final int RESULT_ENABLE = 11;
@@ -86,6 +94,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         int a =settingsPref.getInt("numOfImagesToShow",0);
         int b =settingsPref.getInt("numOfImagesToSelect",0);
         Toast.makeText(this,"To show: "+a+" To Select: "+b,Toast.LENGTH_SHORT).show();
+        actionsData = new ActionObject();
+        actionsData.setUserId(dc.id(this));
+        actionsData.setTimeStamp(dc.getCurrentTimestamp());
+        actionsData.setSessionId(sessionId);
         //Check matrix scale- if 3x2:
         //numOfImgs=6;
         //this.imgsToSelect=2
@@ -123,15 +135,24 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     }
 
     private void updateImages() {
-        List<Map.Entry<String, Integer>> imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
+
+        List<Map.Entry<String, Integer>> imagesEntry = null;
+        try {
+            imagesEntry = shuffleAlgorithm.shuffle(imgsToSelect,numOfImgs-imgsToSelect);
+        } catch (BadRatingDistributionException e) {
+            e.printStackTrace();
+        }
         ArrayList<String> images = new ArrayList<String>();
         for (Map.Entry<String, Integer> entry:imagesEntry) {
             images.add(entry.getKey());
         }
+        actionsData.setShown(images);
+        actionsData.setTopRated(shuffleAlgorithm.getCorrectAnswer());
         updateImageView(images);
     }
 
     private void updateImageView(ArrayList<String> images) {
+        timeStart = System.currentTimeMillis();// start from the moment pics are shown
         for (int i = 1; i <= images.size(); i++) {
             int drawableResourceId = this.getResources().getIdentifier(images.get(i-1), "drawable", this.getPackageName());
             int id = getResources().getIdentifier("img" +i, "id", this.getPackageName());
@@ -200,7 +221,12 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
 
     private void handleSubmit() {
         if(ValidateSelected()){
+            actionsData.setSelected(selected);
+            actionsData.setSuccess(true);
+            timeEnd = System.currentTimeMillis();
+            actionsData.setTimeToPass((timeEnd-timeEnd)+"");
             kioskMode.lockUnlock(this,false);
+
             this.finish();
         }
         else {
@@ -210,6 +236,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 onFailShowPin=true;
             }
             else{
+                actionsData.setSelected(selected);
+                actionsData.setSuccess(false);
+                timeEnd = System.currentTimeMillis();
+                actionsData.setTimeToPass((timeEnd-timeEnd)+"");
                 //Move to pin lock screen
                 //TODO
             }
