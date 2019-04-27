@@ -66,9 +66,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         for (Field field : fields) {
             // Take only those with name starting with "p"
             if (field.getName().startsWith("p")) {
+                String string = field.getName().substring(1,field.getName().length());
                 try {
+                    Double num = Double.parseDouble(string);
                     drawables.add(field.getInt(null));
-                } catch (IllegalAccessException e) {
+
+                } catch (Exception e) {
                     Toast.makeText(SetupActivity.this,"Problem counting images",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -148,7 +151,13 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleBackClick() {
         if(numOfPage==1) {
             saveRatings();
-            startActivity(new Intent(this, InstructionActivity.class));
+            if(imagePref.getAll().size()==numOfImages) {
+                startActivity(new Intent(this, SettingsActivity.class));
+                finish();
+            }else{
+                startActivity(new Intent(this, InstructionActivity.class));
+                finish();
+            }
         }
         else{
             saveRatings();
@@ -213,16 +222,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
-            saveRatings();
             ShuffleAlgorithm algo = new ShuffleAlgorithm(getAllRatingsMap());
             try {
-                    algo.shuffle(2, 7);
-                    algo.shuffle(4, 5);
+                algo.shuffle(2, 7);
+                algo.shuffle(4, 5);
             }catch (BadRatingDistributionException e){
                 Toast.makeText(this,"Rating need to be spread",Toast.LENGTH_LONG).show();
                 return;
             }
-
+            saveRatings();
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
@@ -247,6 +255,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         return imageRatings;
     }
 
+
     private void popDialog(){
         final AlertDialog.Builder ad = new AlertDialog.Builder(this);
         ad.setTitle("Instructions");
@@ -260,5 +269,4 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         //ad.create();
         ad.show();
     }
-
 }
