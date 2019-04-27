@@ -4,7 +4,11 @@ package com.hey.idbyimage.idbyimage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.icu.text.IDNA;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -132,10 +136,25 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             int drawableResourceId = this.getResources().getIdentifier(images.get(i-1), "drawable", this.getPackageName());
             int id = getResources().getIdentifier("img" +i, "id", this.getPackageName());
             ImageView img = findViewById(id);
-            img.setBackgroundResource(drawableResourceId);
+            img.setImageResource(drawableResourceId);
             img.setTag(images.get(i-1));
-            img.setImageResource(android.R.color.transparent);
         }
+    }
+
+    private Bitmap addWaterMark(Bitmap src) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        Bitmap result = Bitmap.createBitmap(w, h, src.getConfig());
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(src, 0, 0, null);
+
+        Bitmap waterMark = BitmapFactory.decodeResource(getResources(), R.drawable.checked);
+        //  canvas.drawBitmap(waterMark, 0, 0, null);
+        int startX= (canvas.getWidth()-waterMark.getWidth())/2;//for horisontal position
+        int startY=(canvas.getHeight()-waterMark.getHeight())/2;//for vertical position
+        canvas.drawBitmap(waterMark,startX,startY,null);
+
+        return result;
     }
 
     public HashMap<String, Integer> getAllRatingsMap(){
@@ -183,9 +202,10 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             int id=v.getId();
             ImageView img =findViewById(id);
             String name = (String) img.getTag();
+            int imgID = this.getResources().getIdentifier(name, "drawable", this.getPackageName());
             if (selected.contains(name)) {
                 selected.remove(name);
-                img.setImageResource(android.R.color.transparent);
+                img.setImageResource(imgID);
                 return;
             }
             int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());
