@@ -1,8 +1,10 @@
 package com.hey.idbyimage.idbyimage;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,14 +15,17 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences imagePref;
 
-    private Button back,next;
+    private Button back,next, helpBtn;
     private SeekBar rating1,rating2;
     private ImageView image1,image2;
     private TextView indicator,rating1prog,rating2prog;
@@ -52,6 +57,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void setButtonListener() {
         back.setOnClickListener(this);
         next.setOnClickListener(this);
+        helpBtn.setOnClickListener(this);
     }
 
     private int CountImages() {
@@ -118,6 +124,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         numOfPage=1;
         back = findViewById(R.id.backbtn);
         next = findViewById(R.id.nextbtn);
+        helpBtn = findViewById(R.id.helpBtn);
         rating1=findViewById(R.id.rating1);
         rating2=findViewById(R.id.rating2);
         image1=findViewById(R.id.imagePlace1);
@@ -134,6 +141,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             handleBackClick();
         else if(v==next)
             handleNextClick();
+        else if (v==helpBtn)
+            popDialog();
     }
 
     private void handleBackClick() {
@@ -205,6 +214,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
             saveRatings();
+            ShuffleAlgorithm algo = new ShuffleAlgorithm(getAllRatingsMap());
+            try {
+                    algo.shuffle(2, 7);
+                    algo.shuffle(4, 5);
+            }catch (BadRatingDistributionException e){
+                Toast.makeText(this,"Rating need to be spread",Toast.LENGTH_LONG).show();
+                return;
+            }
+
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
@@ -213,6 +231,34 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             numOfPage++;
             loadSetupScreen();
         }
+    }
+
+    public HashMap<String, Integer> getAllRatingsMap(){
+        HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
+        int loopIndex = CountImages();
+        for (int i=1;i<=loopIndex;i++){
+            String imgName=getImageFileName(i);
+            int ratingofImage=imagePref.getInt(imgName,0);
+            if(ratingofImage>0)
+                imageRatings.put(imgName,ratingofImage);
+            else
+                break;
+        }
+        return imageRatings;
+    }
+
+    private void popDialog(){
+        final AlertDialog.Builder ad = new AlertDialog.Builder(this);
+        ad.setTitle("Instructions");
+        ad.setMessage("These are some instructions");
+        ad.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        //ad.create();
+        ad.show();
     }
 
 }
