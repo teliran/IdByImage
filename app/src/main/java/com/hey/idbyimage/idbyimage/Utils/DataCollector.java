@@ -80,6 +80,17 @@ public class DataCollector {
         return true;
     }
 
+    public boolean sendActionsDataToServer(ActionObject actions){
+        if (serverStatus != 200){
+            return false;
+        }
+        JSONObject userActions = getActionsJsonObject(actions);
+        if (!sendDataToServer(userActions, "/actions")){
+            return false;
+        }
+        return true;
+    }
+
     public void checkServerStatus(){
         //Create a URL object holding our url : SERVER_URL+"/healthcheck"
         Thread thread = new Thread(new Runnable() {
