@@ -14,9 +14,9 @@ public class ActionObject {
     private String userId;
     private String sessionId;
     private String timeStamp;
-    private String totalScreens;
-    private String screenOrder;
-    private String timeToPass;
+    private int totalScreens;
+    private int screenOrder;
+    private int timeToPass;
     private boolean success;
     private List<String> selected;
     private List<String> shown;
@@ -29,11 +29,11 @@ public class ActionObject {
         topRated = new ArrayList<>();
     }
 
-    public String getTimeToPass() {
+    public int getTimeToPass() {
         return timeToPass;
     }
 
-    public void setTimeToPass(String timeToPass) {
+    public void setTimeToPass(int timeToPass) {
         this.timeToPass = timeToPass;
     }
 
@@ -49,11 +49,11 @@ public class ActionObject {
         return timeStamp;
     }
 
-    public String getTotalScreens() {
+    public int getTotalScreens() {
         return totalScreens;
     }
 
-    public String getScreenOrder() {
+    public int getScreenOrder() {
         return screenOrder;
     }
 
@@ -86,11 +86,11 @@ public class ActionObject {
         this.timeStamp = timeStamp;
     }
 
-    public void setTotalScreens(String totalScreens) {
+    public void setTotalScreens(int totalScreens) {
         this.totalScreens = totalScreens;
     }
 
-    public void setScreenOrder(String screenOrder) {
+    public void setScreenOrder(int screenOrder) {
         this.screenOrder = screenOrder;
     }
 
@@ -112,5 +112,18 @@ public class ActionObject {
                 this.topRated.add(entry.getKey());
             }
         }
+    }
+
+    public void printActionObject(){
+        System.out.println("userId: "+ userId);
+        System.out.println("sessionId: "+ sessionId);
+        System.out.println("timestmap: "+ timeStamp);
+        System.out.println("totalScreens: "+ totalScreens);
+        System.out.println("screenOrder: "+ screenOrder);
+        System.out.println("timeToPass: "+ timeToPass);
+        System.out.println("success: "+ success);
+        System.out.println("selected: "+ selected);
+        System.out.println("shown: "+ shown);
+        System.out.println("topRated: "+ topRated);
     }
 }

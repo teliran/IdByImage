@@ -4,6 +4,7 @@ package com.hey.idbyimage.idbyimage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.icu.text.IDNA;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 
@@ -28,10 +30,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     private SharedPreferences imagePref;
     private Button submit,back;
     private ArrayList<String> selected;
+    private TextView screenIndic;
     private boolean onFailShowPin;
     private int numOfImgs;
     private int imgsToSelect;
     private int numOfScreens;
+    private int currentScreenNum;
 
     private ShuffleAlgorithm shuffleAlgorithm;
     //Field for ImageSelectionAlgo - api: createImgSet:HashMap<String,Integer>->ArrayList<String>, getMean: ->float, getDev: ()->float
@@ -75,9 +79,12 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setupSharedPreferences(sharedPreferences);
         loadMatrixSizeFromPreference(sharedPreferences);
-//        loadNumOfimagesFromPreference(sharedPreferences);
-
-        setContentView(R.layout.activity_lock_screen_3x3);
+        loadNumOfimagesFromPreference(sharedPreferences);
+        loadNumOfScreensFromPreference(sharedPreferences);
+        if(numOfImgs==9)
+            setContentView(R.layout.activity_lock_screen_3x3);
+        else
+            setContentView(R.layout.activity_lock_screen_3x2);
         initVars();
 
         for (int i=0;i<numOfImgs;i++){
@@ -86,6 +93,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.BLACK);
     }
 
     private void setupSharedPreferences(SharedPreferences sharedPreferences) {
@@ -97,12 +107,17 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
+        currentScreenNum=1;
         updateImages();
 
+        TextView titleText = findViewById(R.id.titleText);
         submit=findViewById(R.id.submit);
         submit.setOnClickListener(this);
         back=findViewById(R.id.backBtn);
         back.setOnClickListener(this);
+        titleText.setText("Select "+this.imgsToSelect+" Images");
+        screenIndic=findViewById(R.id.ScreenNumIndic);
+        screenIndic.setText(currentScreenNum+"/"+numOfScreens);
     }
 
     /**
@@ -190,19 +205,32 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void handleSubmit() {
-        if(ValidateSelected()){
-            Toast.makeText(this,"Success",Toast.LENGTH_SHORT).show();
-            finish();
+        if(ValidateSelected()) {
+            if (currentScreenNum == numOfScreens){
+                Toast.makeText(this, "Success & finished", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+            {
+                selected = new ArrayList<String>();
+                currentScreenNum++;
+                screenIndic.setText(currentScreenNum+"/"+numOfScreens);
+                updateImages();
+                onFailShowPin=false;
+                Toast.makeText(this,"Success but not finished",Toast.LENGTH_SHORT).show();
+            }
         }
         else {
             if (!onFailShowPin) {
                 selected = new ArrayList<String>();
                 updateImages();
                 onFailShowPin=true;
+                Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show();
             }
             else{
-                //Move to pin lock screen
-                //TODO
+                Intent pinLock = new Intent(this,PinLockScreenActivity.class);
+                startActivity(pinLock);
+                finish();
             }
         }
     }

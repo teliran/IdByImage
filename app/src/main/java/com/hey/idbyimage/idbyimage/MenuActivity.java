@@ -1,11 +1,9 @@
 package com.hey.idbyimage.idbyimage;
 
-import android.content.DialogInterface;
 import android.app.Activity;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MenuActivity extends AppCompatActivity implements  View.OnClickListener{
+public class MenuActivity extends AppCompatActivity implements  View.OnClickListener {
     private Button trybtn;
     private Button activatebtn;
     private Button settingsbtn;
-    private Button instructbtn;
     private Button removePermission;
     private DevicePolicyManager devicePolicyManager=null;
     private ComponentName componentName=null;
@@ -34,12 +31,10 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         trybtn=findViewById(R.id.trybtn);
         activatebtn=findViewById(R.id.activatebtn);
         settingsbtn=findViewById(R.id.settingsbtn);
-        instructbtn = findViewById(R.id.HelpBtn);
         removePermission=findViewById(R.id.removePerm);
         trybtn.setOnClickListener(this);
         activatebtn.setOnClickListener(this);
         settingsbtn.setOnClickListener(this);
-        instructbtn.setOnClickListener(this);
         removePermission.setOnClickListener(this);
         setupSharedPreferences();
     }
@@ -55,35 +50,20 @@ public class MenuActivity extends AppCompatActivity implements  View.OnClickList
         else if(v==activatebtn){
             if(!askPermission()){
                 startActivity(new Intent(this, LockScreenKioskActivity.class));
-                finish();
+
             }
+            finish();
 
         }
         else if(v==settingsbtn){
             startActivity(new Intent(this,SettingsActivity.class));
+            finish();
         }
-        else if (v==instructbtn){
-            popDialog();
-        }
+
         else if(v==removePermission){
             removeAdmin();
             Toast.makeText(this, "Successfull Remove of the permission",Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void popDialog(){
-        final AlertDialog.Builder ad = new AlertDialog.Builder(this);
-        ad.setTitle("Instructions");
-        ad.setMessage("These are some instructions");
-        ad.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        //ad.create();
-        ad.show();
-
     }
 
     public void removeAdmin(){

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hey.idbyimage.idbyimage.Utils.DataCollector;
+
+import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -53,7 +56,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setButtonListener();
         setTextForRatings();
         loadSetupScreen();
-
+        View view = this.getWindow().getDecorView();
+        view.setBackgroundColor(Color.BLACK);
     }
 
     private void setButtonListener() {
@@ -216,6 +220,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void handleNextClick() {
         if (numOfPage == numOfImages / 2) {
             saveRatings();
+
+            ShuffleAlgorithm algo = new ShuffleAlgorithm(getAllRatingsMap());
+            try {
+                    algo.shuffle(2, 7);
+                    algo.shuffle(4, 5);
+            }catch (BadRatingDistributionException e){
+                Toast.makeText(this,"Rating need to be spread",Toast.LENGTH_LONG).show();
+                return;
+            }
+
             //-----------Data Collecting---------------
             dc.setImageRatingsData(getAllRatingsMap());
             final String id = dc.id(this);
@@ -235,6 +249,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
             //-----------End of Data Collecting------------
+
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
@@ -244,6 +259,20 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             loadSetupScreen();
         }
     }
+
+    /*public HashMap<String, Integer> getAllRatingsMap(){
+        HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
+        int loopIndex = CountImages();
+        for (int i=1;i<=loopIndex;i++){
+            String imgName=getImageFileName(i);
+            int ratingofImage=imagePref.getInt(imgName,0);
+            if(ratingofImage>0)
+                imageRatings.put(imgName,ratingofImage);
+            else
+                break;
+        }
+        return imageRatings;
+    }*/
 
     private void popDialog(){
         final AlertDialog.Builder ad = new AlertDialog.Builder(this);
