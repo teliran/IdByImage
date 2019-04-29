@@ -146,8 +146,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             int drawableResourceId = this.getResources().getIdentifier(images.get(i-1), "drawable", this.getPackageName());
             int id = getResources().getIdentifier("img" +i, "id", this.getPackageName());
             ImageView img = findViewById(id);
-            img.setImageResource(drawableResourceId);
+            img.setBackgroundResource(drawableResourceId);
             img.setTag(images.get(i-1));
+            img.setImageResource(android.R.color.transparent);
         }
     }
 
@@ -187,10 +188,16 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         for (Field field : fields) {
             // Take only those with name starting with "p"
             if (field.getName().startsWith("p")) {
+                String string = field.getName().substring(1,field.getName().length());
                 try {
+                    Double num = Double.parseDouble(string);
                     drawables.add(field.getInt(null));
+
                 } catch (IllegalAccessException e) {
                     Toast.makeText(this,"Problem counting images",Toast.LENGTH_SHORT).show();
+                }
+                catch (NumberFormatException e){
+
                 }
             }
         }
@@ -215,7 +222,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             int imgID = this.getResources().getIdentifier(name, "drawable", this.getPackageName());
             if (selected.contains(name)) {
                 selected.remove(name);
-                img.setImageResource(imgID);
+                img.setImageResource(android.R.color.transparent);
                 return;
             }
             int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());

@@ -183,10 +183,16 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         for (Field field : fields) {
             // Take only those with name starting with "p"
             if (field.getName().startsWith("p")) {
+                String string = field.getName().substring(1,field.getName().length());
                 try {
+                    Double num = Double.parseDouble(string);
                     drawables.add(field.getInt(null));
+
                 } catch (IllegalAccessException e) {
                     Toast.makeText(this,"Problem counting images",Toast.LENGTH_SHORT).show();
+                }
+                catch (NumberFormatException e){
+
                 }
             }
         }
@@ -256,6 +262,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         }
         return true;
     }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

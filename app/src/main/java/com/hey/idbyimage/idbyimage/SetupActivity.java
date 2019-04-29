@@ -71,8 +71,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     Double num = Double.parseDouble(string);
                     drawables.add(field.getInt(null));
 
-                } catch (Exception e) {
+                } catch (IllegalAccessException e) {
                     Toast.makeText(SetupActivity.this,"Problem counting images",Toast.LENGTH_SHORT).show();
+                }
+                catch (NumberFormatException e){
+
                 }
             }
         }
