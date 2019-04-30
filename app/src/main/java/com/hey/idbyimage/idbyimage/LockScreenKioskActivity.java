@@ -46,7 +46,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     private ShuffleAlgorithm shuffleAlgorithm;
     //--------------------Data collecting -----------------------
     private DataCollector dc = DataCollector.getDataCollectorInstance();
-    private final  String sessionId = dc.generateUniqueSessionId();
+    private final  String sessionId = dc.generateUniqueSessionId(); //move
     private ActionObject actionsData; //Data Object for storing the actions data
     private long timeStart;
     private long timeEnd;
@@ -237,6 +237,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
 
     private void handleSubmit() {
         if(ValidateSelected()){
+            //session id should here
             if (currentScreenNum == numOfScreens){
                 kioskMode.lockUnlock(this, false);
                 actionsData.setSelected(selected);
@@ -261,7 +262,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             runQueryThread();
 
         }
-        else {
+        else {//
             if (!onFailShowPin) {
                 selected = new ArrayList<String>();
                 updateImages();
