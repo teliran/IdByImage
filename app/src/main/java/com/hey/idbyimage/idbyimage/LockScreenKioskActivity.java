@@ -17,9 +17,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.hey.idbyimage.idbyimage.Utils.ActionObject;
 import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 import com.hey.idbyimage.idbyimage.Utils.BaseActivity;
+import com.hey.idbyimage.idbyimage.Utils.DataCollector;
 import com.hey.idbyimage.idbyimage.Utils.KioskMode;
 import com.hey.idbyimage.idbyimage.Utils.MySharedPreferences;
 
@@ -42,8 +43,13 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     private TextView screenIndic;
 
     private ShuffleAlgorithm shuffleAlgorithm;
-
-
+    //--------------------Data collecting -----------------------
+    private DataCollector dc = DataCollector.getDataCollectorInstance();
+    //private final  String sessionId = dc.generateUniqueSessionId(); //move
+    private ActionObject actionsData; //Data Object for storing the actions data
+    private long timeStart;
+    private long timeEnd;
+    //----------------------------------------------------------------------
     private static final String TAG = LockScreenKioskActivity.class.getSimpleName();
     final private FragmentManager fragmentManager = getSupportFragmentManager();
     public static final int RESULT_ENABLE = 11;
@@ -89,11 +95,15 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionsData = new ActionObject();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setupSharedPreferences(sharedPreferences);
         loadMatrixSizeFromPreference(sharedPreferences);
         loadNumOfimagesFromPreference(sharedPreferences);
         loadNumOfScreensFromPreference(sharedPreferences);
+        actionsData.setUserId(dc.id(this));
+        actionsData.setTimeStamp(dc.getCurrentTimestamp());
+        actionsData.setTotalScreens(numOfScreens);
         if(numOfImgs==9)
             setContentView(R.layout.activity_lock_screen_3x3);
         else
@@ -145,12 +155,14 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             for (Map.Entry<String, Integer> entry:imagesEntry) {
                 images.add(entry.getKey());
             }
+            actionsData.setShown(images);
+            actionsData.setTopRated(shuffleAlgorithm.getCorrectAnswer());
             updateImageView(images);
         }catch (BadRatingDistributionException e){
             Toast.makeText(this,"This should not happen",Toast.LENGTH_SHORT).show();
         }
-
     }
+
 
     private void updateImageView(ArrayList<String> images) {
         for (int i = 1; i <= images.size(); i++) {
@@ -225,29 +237,65 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
 
     private void handleSubmit() {
         if(ValidateSelected()){
+            //session id should here
             if (currentScreenNum == numOfScreens){
-                    kioskMode.lockUnlock(this, false);
-                    this.finish();
-                }
+                kioskMode.lockUnlock(this, false);
+                actionsData.setSelected(selected);
+                actionsData.setSuccess(true);
+                timeEnd = System.currentTimeMillis();
+                actionsData.setScreenOrder(currentScreenNum);
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
+                this.finish();
+            }
             else
             {
                 selected = new ArrayList<String>();
+                actionsData.setScreenOrder(currentScreenNum);
                 currentScreenNum++;
                 updateImages();
+                actionsData.setSelected(selected);
+                actionsData.setSuccess(true);
+                timeEnd = System.currentTimeMillis();
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 screenIndic.setText(currentScreenNum+"/"+numOfScreens);
             }
+            runQueryThread();
+
         }
-        else {
+        else {//
+            actionsData.setSuccess(false);
+            timeEnd = System.currentTimeMillis();
             if (!onFailShowPin) {
+                actionsData.setSelected(selected);
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 selected = new ArrayList<String>();
                 updateImages();
                 onFailShowPin=true;
             }
             else{
+                actionsData.setSelected(selected);
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
+                runQueryThread();
                 Intent pinLock = new Intent(this,PinLockScreenActivity.class);
                 startActivity(pinLock);
                 finish();
             }
+        }
+    }
+
+    private void runQueryThread() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dc.sendActionsDataToServer(actionsData);
+            }
+        });
+        t.setPriority(Thread.MAX_PRIORITY);
+        t.start();
+        try {
+            Thread.currentThread().join(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -336,6 +384,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     @Override
     public void onResume(){
         super.onResume();
+        if (!onFailShowPin)
+            timeStart = System.currentTimeMillis();// start from the moment pics are shown
+        final  String sessionId = dc.generateUniqueSessionId();
+        actionsData.setSessionId(sessionId);
         selected = new ArrayList<String>();
         currentScreenNum=1;
         onFailShowPin=false;

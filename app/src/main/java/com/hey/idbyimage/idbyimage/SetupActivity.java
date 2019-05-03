@@ -8,12 +8,15 @@ import android.support.v7.app.AlertDialog;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hey.idbyimage.idbyimage.Utils.DataCollector;
 
 import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 
@@ -29,6 +32,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private SeekBar rating1,rating2;
     private ImageView image1,image2;
     private TextView indicator,rating1prog,rating2prog;
+    DataCollector dc;
+
 
     public int getNumOfImages() {
         return numOfImages;
@@ -46,6 +51,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_setup);
         numOfImages=CountImages();
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
+        dc = DataCollector.getDataCollectorInstance();
         initElements();
         setButtonListener();
         setTextForRatings();
@@ -234,6 +240,26 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
             saveRatings();
+            //-----------Data Collecting---------------
+            dc.setImageRatingsData(getAllRatingsMap());
+            final String id = dc.id(this);
+            Log.i("UNIQUE ID: ", id);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    dc.sendAllUserRatingsToServer(id);
+                }
+            });
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+            //dc.sendAllUserRatingsToServer(id);
+            try {
+                Thread.currentThread().join(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //-----------End of Data Collecting------------
+
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }
