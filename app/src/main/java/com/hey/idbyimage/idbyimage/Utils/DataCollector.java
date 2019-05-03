@@ -211,9 +211,9 @@ public class DataCollector {
             actionJson.put("screen_order", actionObject.getScreenOrder());
             actionJson.put("time_to_pass", actionObject.getTimeToPass());
             actionJson.put("success", actionObject.isSuccess());
-            actionJson.put("selected_images", actionObject.getSelected());
-            actionJson.put("shown_images", actionObject.getShown());
-            actionJson.put("top_rated_images", actionObject.getTopRated());
+            actionJson.put("selected_images", actionObject.getSelected().toString());
+            actionJson.put("shown_images", actionObject.getShown().toString());
+            actionJson.put("top_rated_images", actionObject.getTopRated().toString());
 
         } catch (JSONException e) {
             e.printStackTrace();

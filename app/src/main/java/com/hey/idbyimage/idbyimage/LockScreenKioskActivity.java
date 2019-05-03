@@ -46,7 +46,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     private ShuffleAlgorithm shuffleAlgorithm;
     //--------------------Data collecting -----------------------
     private DataCollector dc = DataCollector.getDataCollectorInstance();
-    private final  String sessionId = dc.generateUniqueSessionId(); //move
+    //private final  String sessionId = dc.generateUniqueSessionId(); //move
     private ActionObject actionsData; //Data Object for storing the actions data
     private long timeStart;
     private long timeEnd;
@@ -96,15 +96,14 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionsData = new ActionObject();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         setupSharedPreferences(sharedPreferences);
         loadMatrixSizeFromPreference(sharedPreferences);
         loadNumOfimagesFromPreference(sharedPreferences);
         loadNumOfScreensFromPreference(sharedPreferences);
-        actionsData = new ActionObject();
         actionsData.setUserId(dc.id(this));
         actionsData.setTimeStamp(dc.getCurrentTimestamp());
-        actionsData.setSessionId(sessionId);
         if(numOfImgs==9)
             setContentView(R.layout.activity_lock_screen_3x3);
         else
@@ -167,8 +166,6 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
 
 
     private void updateImageView(ArrayList<String> images) {
-        if (!onFailShowPin)
-            timeStart = System.currentTimeMillis();// start from the moment pics are shown
         for (int i = 1; i <= images.size(); i++) {
             int drawableResourceId = this.getResources().getIdentifier(images.get(i-1), "drawable", this.getPackageName());
             int id = getResources().getIdentifier("img" +i, "id", this.getPackageName());
@@ -244,7 +241,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setSuccess(true);
                 timeEnd = System.currentTimeMillis();
                 actionsData.setScreenOrder(currentScreenNum);
-                actionsData.setTimeToPass((int)(timeEnd-timeEnd));
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 this.finish();
             }
             else
@@ -256,23 +253,25 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setSelected(selected);
                 actionsData.setSuccess(true);
                 timeEnd = System.currentTimeMillis();
-                actionsData.setTimeToPass((int)(timeEnd-timeEnd));
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 screenIndic.setText(currentScreenNum+"/"+numOfScreens);
             }
             runQueryThread();
 
         }
         else {//
+            actionsData.setSuccess(false);
+            timeEnd = System.currentTimeMillis();
             if (!onFailShowPin) {
+                actionsData.setSelected(selected);
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 selected = new ArrayList<String>();
                 updateImages();
                 onFailShowPin=true;
             }
             else{
                 actionsData.setSelected(selected);
-                actionsData.setSuccess(false);
-                timeEnd = System.currentTimeMillis();
-                actionsData.setTimeToPass((int)(timeEnd-timeEnd));
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 runQueryThread();
                 Intent pinLock = new Intent(this,PinLockScreenActivity.class);
                 startActivity(pinLock);
@@ -382,6 +381,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     @Override
     public void onResume(){
         super.onResume();
+        if (!onFailShowPin)
+            timeStart = System.currentTimeMillis();// start from the moment pics are shown
+        final  String sessionId = dc.generateUniqueSessionId();
+        actionsData.setSessionId(sessionId);
         selected = new ArrayList<String>();
         currentScreenNum=1;
         onFailShowPin=false;
