@@ -22,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="16dp"
-        android:text="You are about to rate a set of images. \nIn order to make the identification as accurate as poosiable we encourge you to rate the images as versitail and accurrate as possible. \nOnce you will finish the initial rating you will be asked to choose the most beatful images from a set of images. \nIf you will choose your top rated images, you will be granted the access to your device. \nNote! there is a safety machanisem to prevent you from getting locked out of your device."
+        android:text="You are about to rate a set of images. \nIn order to make the identification as accurate as possible we encourage you to rate the images as versatile and accurate as possible. \nOnce you will finish the initial rating you will be asked to choose the most beautiful images from a set of images. \nIf you will choose your top rated images, you will be granted the access to your device. \nNote! there is a safety mechanism to prevent you from getting locked out of your device."
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
