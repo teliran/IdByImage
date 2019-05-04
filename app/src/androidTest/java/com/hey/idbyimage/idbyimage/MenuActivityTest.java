@@ -25,8 +25,10 @@ public class MenuActivityTest {
     public void testLayout(){
         Button tryBtn = mActivity.findViewById(R.id.trybtn);
         Button activate = mActivity.findViewById(R.id.activatebtn);
+        Button removePer = mActivity.findViewById(R.id.removePerm);
         Button settings = mActivity.findViewById(R.id.settingsbtn);
         assertNotNull(tryBtn);
+        assertNotNull(removePer);
         assertNotNull(activate);
         assertNotNull(settings);
     }
