@@ -40,6 +40,7 @@ public class FlowWelcomeInstraction {
 
         ViewInteraction button = onView(
                 allOf(withId(R.id.backbtn),
+                        withText("Back"),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 

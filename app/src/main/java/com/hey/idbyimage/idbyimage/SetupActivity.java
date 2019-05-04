@@ -152,9 +152,18 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void handleBackClick() {
+        Intent intent;
         if(numOfPage==1) {
             saveRatings();
             if(imagePref.getAll().size()==numOfImages) {
+                ShuffleAlgorithm algo = new ShuffleAlgorithm(getAllRatingsMap());
+                try {
+                    algo.shuffle(2, 7);
+                    algo.shuffle(4, 5);
+                }catch (BadRatingDistributionException e){
+                    Toast.makeText(this,"Rating need to be spread",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 startActivity(new Intent(this, SettingsActivity.class));
                 finish();
             }else{

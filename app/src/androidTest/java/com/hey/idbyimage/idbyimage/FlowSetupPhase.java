@@ -39,11 +39,10 @@ public class FlowSetupPhase {
     public ActivityTestRule<InstructionActivity> mActivityTestRule = new ActivityTestRule<>(InstructionActivity.class);
 
     @Test
-    public void flowWelcomeInstraction() {
+    public void FlowSetupPhase() {
         TestInstractionToUserDate();
         TestUserDataToPinLock();
         TestPinLockToSetup();
-        //FinishSetup();
 
     }
 
