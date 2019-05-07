@@ -107,9 +107,12 @@ public class ActionObject {
     }
 
     public void setTopRated(List<Map.Entry<String, Integer>> topRated) {
+        this.topRated = new ArrayList<>();
         if (!topRated.isEmpty()) {
             for (Map.Entry<String, Integer> entry : topRated) {
-                this.topRated.add(entry.getKey());
+                if (!topRated.contains(entry.getKey())) {
+                    this.topRated.add(entry.getKey());
+                }
             }
         }
     }

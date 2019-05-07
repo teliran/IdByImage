@@ -16,23 +16,64 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener{
+    private static SharedPreferences actionsDataPref;
+    private static SharedPreferences userDataPref;
     private Button next;
+    private DataCollector dc = DataCollector.getDataCollectorInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         next = findViewById(R.id.nextbtn);
         next.setOnClickListener(this);
-        /*DataCollector dc = DataCollector.getDataCollectorInstance(); ///DEBUG
-        String id = dc.id(this);
-        System.out.println(id);*/
+        actionsDataPref = getSharedPreferences("actionsDataPrefs", Context.MODE_PRIVATE);
+        userDataPref = getSharedPreferences("userDataPref", Context.MODE_PRIVATE);
+        dc.setSharedPref(actionsDataPref);
+        dc.setUserDataPref(userDataPref);
+    }
 
+    private void sendStoredActionsData() {
+        if (dc.getFromActionsDataPref()){
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    dc.sendStoredUserActions();
+                }
+            });
+            t.setName("sending stored user actions");
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+            try {
+                Thread.currentThread().join(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void sendStoredUserData(){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dc.sendStoredUserData();
+            }
+        });
+        t.setName("sending stored user data");
+        t.setPriority(Thread.MAX_PRIORITY);
+        t.start();
+        try {
+            Thread.currentThread().join(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onClick(View v) {
         Intent intent = null;
         if(v.getId()==R.id.nextbtn) {
+            sendStoredUserData();
+            sendStoredActionsData();
             SharedPreferences pref = getSharedPreferences("imagePref", Context.MODE_PRIVATE);
             if (pref.getAll().size() == CountImages()) {
                 intent = new Intent(this, MenuActivity.class);

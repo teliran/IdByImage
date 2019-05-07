@@ -2,7 +2,6 @@ package com.hey.idbyimage.idbyimage.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -11,15 +10,15 @@ import android.util.Log;
 import java.io.DataOutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
+
 
 /**
  * DataCollector - Single Object intended to collect the user's data,
@@ -27,11 +26,15 @@ import java.util.concurrent.CountDownLatch;
  */
 public class DataCollector {
 
+    private static SharedPreferences actionsDataPref;
+    private static  SharedPreferences userDataPref;
+    //private static Context context;
     private static  final String SERVER_URL = "http://132.72.23.63:3001";
     private static DataCollector dataCollector = null;
     private int serverStatus;
     private boolean queryResp;
     private HashMap<String, Integer> allImagesRatings;
+    private ArrayList<JSONObject> allActions;
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
@@ -43,6 +46,11 @@ public class DataCollector {
             e.printStackTrace();
         }
         this.allImagesRatings = new HashMap<>();
+        /*try {
+            actionsDataPref = context.getSharedPreferences("actionsDataPrefs", Context.MODE_PRIVATE);
+        }catch(Exception e){
+            System.out.println("Unit Test");
+        }*/
 
     }
 
@@ -52,13 +60,21 @@ public class DataCollector {
         }
         return  dataCollector;
     }
+    public void setSharedPref(SharedPreferences prf){
+        this.actionsDataPref = prf;
+    }
+
+    public void setUserDataPref(SharedPreferences prf){
+        this.userDataPref = prf;
+    }
+    /*public static void setContext(Context context) {
+        DataCollector.context = context;
+    }*/
 
     public boolean sendActionsDataToServer(ActionObject actions){
-        if (serverStatus != 200){
-            return false;
-        }
         JSONObject userActions = getActionsJsonObject(actions);
         if (!sendDataToServer(userActions, "/actions")){
+            saveToActionsDataPref(userActions);
             return false;
         }
         return true;
@@ -115,13 +131,55 @@ public class DataCollector {
     }
 
     public boolean sendUserDataToServer(String userID, String age, String gender){
+        JSONObject userJson = getUserJsonObject(userID, age, gender);
+        if (serverStatus!=200){
+            saveToUserDataPref(userJson);
+            return false;
+        }
+        //JSONObject userJson = getUserJsonObject(userID, age, gender);
+        if (!sendDataToServer(userJson, "/users")){
+            saveToUserDataPref(userJson);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean sendStoredUserActions(){
         if (serverStatus!=200){
             return false;
         }
-        JSONObject userJson = getUserJsonObject(userID, age, gender);
-        if (!sendDataToServer(userJson, "/users")){
+        if (allActions!=null){
+            for (JSONObject o: allActions){
+                if (!sendDataToServer(o, "/actions")){
+                    saveToActionsDataPref(o);
+                    return false;
+                }
+            }
+            return true;
+        }
+        return true;
+    }
+
+    public boolean sendStoredUserData(){
+        if (serverStatus!=200){
             return false;
         }
+        String jsonString = getFromUserDataPref();
+        if (jsonString == null){
+            return false;
+        }
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(jsonString);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        if (!sendDataToServer(jsonObject,"/users")){
+            saveToUserDataPref(jsonObject);
+            return false;
+        }
+
         return true;
     }
 
@@ -247,6 +305,58 @@ public class DataCollector {
 
     public String generateUniqueSessionId(){
         return UUID.randomUUID().toString().substring(0,8);
+    }
+
+    private void saveToActionsDataPref(JSONObject data){
+        SharedPreferences.Editor editor = actionsDataPref.edit();
+        editor.putString(data.toString(), getCurrentTimestamp());
+        Log.i("saveToActionsDataPref: ", data.toString());
+        editor.commit();
+    }
+
+    private void saveToUserDataPref(JSONObject data){
+        SharedPreferences.Editor editor = userDataPref.edit();
+        editor.putString("JSON_STRING", data.toString());
+        Log.i("saveToUserDataPref: ", data.toString());
+        editor.commit();
+    }
+
+    public boolean getFromActionsDataPref(){
+        if (serverStatus!=200){
+            return false;
+        }
+        HashMap<String, String> prefsActions = (HashMap<String, String>) actionsDataPref.getAll();
+        if (prefsActions == null)
+            return false;
+        if (!prefsActions.isEmpty()){
+            allActions = new ArrayList<>();
+            for (String jsonString: prefsActions.keySet()){
+                JSONObject json;
+                try {
+                    json = new JSONObject(jsonString);
+                    allActions.add(json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            SharedPreferences.Editor editor = actionsDataPref.edit();
+            editor.clear();
+            editor.commit();
+            return true;
+        }
+        return false;
+    }
+
+    public String getFromUserDataPref(){
+        if (serverStatus!=200){
+            return null;
+        }
+        String jsonString = userDataPref.getString("JSON_STRING", null);
+        SharedPreferences.Editor editor = userDataPref.edit();
+        editor.clear();
+        editor.commit();
+        return jsonString;
     }
 
 

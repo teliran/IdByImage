@@ -27,7 +27,7 @@ import java.util.List;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences imagePref;
-
+    private SharedPreferences wasImagesSentFlag;
     private Button back,next, helpBtn;
     private SeekBar rating1,rating2;
     private ImageView image1,image2;
@@ -51,6 +51,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_setup);
         numOfImages=CountImages();
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
+        wasImagesSentFlag = getSharedPreferences("wasImagesSentFlag", Context.MODE_PRIVATE);
+        setWasImagesSentFlag(false);
         dc = DataCollector.getDataCollectorInstance();
         initElements();
         setButtonListener();
@@ -241,22 +243,26 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             }
             saveRatings();
             //-----------Data Collecting---------------
-            dc.setImageRatingsData(getAllRatingsMap());
-            final String id = dc.id(this);
-            Log.i("UNIQUE ID: ", id);
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    dc.sendAllUserRatingsToServer(id);
+            dc.checkServerStatus();
+            if (dc.getServerStatus()==200) {
+                setWasImagesSentFlag(true);
+                dc.setImageRatingsData(getAllRatingsMap());
+                final String id = dc.id(this);
+                Log.i("UNIQUE ID: ", id);
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dc.sendAllUserRatingsToServer(id);
+                    }
+                });
+                t.setPriority(Thread.MAX_PRIORITY);
+                t.start();
+                //dc.sendAllUserRatingsToServer(id);
+                try {
+                    Thread.currentThread().join(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
-            t.setPriority(Thread.MAX_PRIORITY);
-            t.start();
-            //dc.sendAllUserRatingsToServer(id);
-            try {
-                Thread.currentThread().join(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
             //-----------End of Data Collecting------------
 
@@ -297,5 +303,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         });
         //ad.create();
         ad.show();
+    }
+
+    private void setWasImagesSentFlag(boolean wasSent){
+        SharedPreferences.Editor editor = wasImagesSentFlag.edit();
+        editor.putBoolean("Was_Sent", wasSent);
+        editor.commit();
     }
 }

@@ -105,8 +105,9 @@ public class DataCollectorTest {
     public void sendActionsDataToServer() {
         ActionObject actions = createActionObject();
         actions.printActionObject();
+        //assertTrue(true);
         assertTrue(dc.sendActionsDataToServer(actions));
-        actions.printActionObject();
+        //actions.printActionObject();
 
     }
 

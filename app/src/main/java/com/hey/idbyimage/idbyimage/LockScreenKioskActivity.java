@@ -33,6 +33,7 @@ import java.util.Map;
 
 public class LockScreenKioskActivity extends BaseActivity implements View.OnClickListener,SharedPreferences.OnSharedPreferenceChangeListener{
     private SharedPreferences imagePref;
+    private SharedPreferences wasImagesSentFlag;
     private Button submit,back;
     private ArrayList<String> selected;
     private boolean onFailShowPin;
@@ -116,9 +117,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
+
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.BLACK);
-
+        sendAllImagesRatings(); //This is in case the ratings were not send in setup.
         devicePolicyManager=(DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         componentName = new ComponentName(this, MyAdmin.class);
         setUpKioskMode();
@@ -131,6 +133,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
 
     private void initVars() {
         imagePref=getSharedPreferences("imagePref", Context.MODE_PRIVATE);
+        wasImagesSentFlag = getSharedPreferences("wasImagesSentFlag", Context.MODE_PRIVATE);
         selected=new ArrayList<String>();
         shuffleAlgorithm=new ShuffleAlgorithm(getAllRatingsMap());
         onFailShowPin=false;
@@ -399,6 +402,43 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
     public void onBackPressed() {
         if (!kioskMode.isLocked(this)) {
             super.onBackPressed();
+        }
+    }
+
+    private boolean getValueFromWasSentPref(){
+       return wasImagesSentFlag.getBoolean("Was_Sent", false);
+    }
+
+    private void setWasImagesSentFlag(boolean wasSent){
+        SharedPreferences.Editor editor = wasImagesSentFlag.edit();
+        editor.putBoolean("Was_Sent", wasSent);
+        editor.commit();
+    }
+
+    private void sendAllImagesRatings(){
+        if (getValueFromWasSentPref()){
+            return;
+        }
+        dc.checkServerStatus();
+        if (dc.getServerStatus()==200) {
+            setWasImagesSentFlag(true);
+            dc.setImageRatingsData(getAllRatingsMap());
+            final String id = dc.id(this);
+            Log.i("UNIQUE ID: ", id);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    dc.sendAllUserRatingsToServer(id);
+                }
+            });
+            t.setPriority(Thread.MAX_PRIORITY);
+            t.start();
+            //dc.sendAllUserRatingsToServer(id);
+            try {
+                Thread.currentThread().join(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
