@@ -103,7 +103,6 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         loadNumOfimagesFromPreference(sharedPreferences);
         loadNumOfScreensFromPreference(sharedPreferences);
         actionsData.setUserId(dc.id(this));
-        actionsData.setTimeStamp(dc.getCurrentTimestamp());
         actionsData.setTotalScreens(numOfScreens);
         if(numOfImgs==9)
             setContentView(R.layout.activity_lock_screen_3x3);
@@ -243,6 +242,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             //session id should here
             if (currentScreenNum == numOfScreens){
                 kioskMode.lockUnlock(this, false);
+                actionsData.setTimeStamp(dc.getCurrentTimestamp());
                 actionsData.setSelected(selected);
                 actionsData.setSuccess(true);
                 timeEnd = System.currentTimeMillis();
@@ -260,6 +260,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setSuccess(true);
                 timeEnd = System.currentTimeMillis();
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
+                actionsData.setTimeStamp(dc.getCurrentTimestamp());
                 screenIndic.setText(currentScreenNum+"/"+numOfScreens);
             }
             runQueryThread();
@@ -267,7 +268,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
         }
         else {//
             actionsData.setSuccess(false);
+            actionsData.setTimeStamp(dc.getCurrentTimestamp());
             timeEnd = System.currentTimeMillis();
+            actionsData.setScreenOrder(currentScreenNum);
             if (!onFailShowPin) {
                 actionsData.setSelected(selected);
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
@@ -278,11 +281,13 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             else{
                 actionsData.setSelected(selected);
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
-                runQueryThread();
+                actionsData.setTimeStamp(dc.getCurrentTimestamp());
+                //runQueryThread();
                 Intent pinLock = new Intent(this,PinLockScreenActivity.class);
                 startActivity(pinLock);
                 finish();
             }
+            runQueryThread();
         }
     }
 
