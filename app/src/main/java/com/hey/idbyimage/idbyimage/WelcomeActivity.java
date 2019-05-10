@@ -31,7 +31,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
             if (pref.getAll().size() == CountImages()) {
                 intent = new Intent(this, MenuActivity.class);
                 startActivity(intent);
-                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
             } else {
                 intent = new Intent(this, InstructionActivity.class);
                 startActivity(intent);
