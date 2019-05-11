@@ -33,17 +33,16 @@ package com.hey.idbyimage.idbyimage;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class FlowInstructionUserdata {
+public class FlowSetupPhase {
 
     @Rule
     public ActivityTestRule<InstructionActivity> mActivityTestRule = new ActivityTestRule<>(InstructionActivity.class);
 
     @Test
-    public void flowWelcomeInstraction() {
+    public void FlowSetupPhase() {
         TestInstractionToUserDate();
         TestUserDataToPinLock();
         TestPinLockToSetup();
-        //FinishSetup();
 
     }
 
