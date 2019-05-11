@@ -1,7 +1,10 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.ClassTesting;
 
 import android.support.test.rule.ActivityTestRule;
 import android.widget.Button;
+
+import com.hey.idbyimage.idbyimage.MenuActivity;
+import com.hey.idbyimage.idbyimage.R;
 
 import org.junit.After;
 import org.junit.Before;

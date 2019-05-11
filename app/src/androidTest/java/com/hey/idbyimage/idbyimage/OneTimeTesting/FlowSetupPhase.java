@@ -1,4 +1,4 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.OneTimeTesting;
 
 // This Test runs only on a device that did not filled the user data yet
 
@@ -13,6 +13,9 @@ package com.hey.idbyimage.idbyimage;
         import android.view.View;
         import android.widget.SeekBar;
 
+        import com.hey.idbyimage.idbyimage.InstructionActivity;
+        import com.hey.idbyimage.idbyimage.R;
+        import com.hey.idbyimage.idbyimage.ShuffleAlgorithm;
         import com.hey.idbyimage.idbyimage.Utils.BadRatingDistributionException;
 
         import org.hamcrest.Matcher;
@@ -69,7 +72,7 @@ public class FlowSetupPhase {
         HashMap<String,Integer> ratings = GenerateRatings(50);
         for(int i=0;i<25;i++){
             ViewInteraction rating1 = onView(
-                    allOf(withId(R.id.rating1),
+                    allOf(ViewMatchers.withId(R.id.rating1),
                             isDisplayed()));
             ViewInteraction rating2 = onView(
                     allOf(withId(R.id.rating2),

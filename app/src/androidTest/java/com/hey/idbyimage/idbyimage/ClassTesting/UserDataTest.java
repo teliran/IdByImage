@@ -1,4 +1,4 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.ClassTesting;
 
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.hey.idbyimage.idbyimage.R;
+import com.hey.idbyimage.idbyimage.UserData;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.ClassTesting;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -7,6 +7,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.hey.idbyimage.idbyimage.R;
+import com.hey.idbyimage.idbyimage.WelcomeActivity;
 
 import org.junit.After;
 import org.junit.Before;

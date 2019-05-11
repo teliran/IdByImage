@@ -1,13 +1,17 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.OneTimeTesting;
 
 
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import com.hey.idbyimage.idbyimage.R;
+import com.hey.idbyimage.idbyimage.WelcomeActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -34,7 +38,7 @@ public class FlowWelcomeInstraction {
     @Test
     public void flowWelcomeInstraction() {
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.nextbtn), withText("Next"),
+                allOf(ViewMatchers.withId(R.id.nextbtn), withText("Next"),
                         isDisplayed()));
         appCompatButton.perform(click());
 

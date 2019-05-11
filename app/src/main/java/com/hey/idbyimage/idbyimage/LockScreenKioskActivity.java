@@ -249,6 +249,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setScreenOrder(currentScreenNum);
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 this.finish();
+                runQueryThread();
+                moveTaskToBack(true);
+                System.exit(0);
             }
             else
             {
@@ -262,8 +265,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 actionsData.setTimeStamp(dc.getCurrentTimestamp());
                 screenIndic.setText(currentScreenNum+"/"+numOfScreens);
+                runQueryThread();
             }
-            runQueryThread();
+
 
         }
         else {//
@@ -277,6 +281,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 selected = new ArrayList<String>();
                 updateImages();
                 onFailShowPin=true;
+                runQueryThread();
             }
             else{
                 actionsData.setSelected(selected);
@@ -286,8 +291,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 Intent pinLock = new Intent(this,PinLockScreenActivity.class);
                 startActivity(pinLock);
                 finish();
+                runQueryThread();
             }
-            runQueryThread();
+
         }
     }
 

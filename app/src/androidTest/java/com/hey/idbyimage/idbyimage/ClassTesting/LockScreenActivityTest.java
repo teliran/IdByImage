@@ -1,9 +1,12 @@
-package com.hey.idbyimage.idbyimage;
+package com.hey.idbyimage.idbyimage.ClassTesting;
 
 import android.support.test.rule.ActivityTestRule;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.hey.idbyimage.idbyimage.LockScreenActivity;
+import com.hey.idbyimage.idbyimage.R;
 
 import org.junit.After;
 import org.junit.Before;

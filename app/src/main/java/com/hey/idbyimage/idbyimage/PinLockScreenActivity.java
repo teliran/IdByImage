@@ -155,6 +155,8 @@ public class PinLockScreenActivity extends AppCompatActivity implements View.OnC
             if (validatePin()) {
                 Toast.makeText(this, "Pin matched", Toast.LENGTH_SHORT).show();
                 this.finish();
+                moveTaskToBack(true);
+                System.exit(0);
             }
             else{
                 firstPin.setText("");
