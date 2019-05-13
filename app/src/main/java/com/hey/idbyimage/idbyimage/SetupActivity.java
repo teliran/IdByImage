@@ -303,7 +303,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     private void popDialog(){
         final AlertDialog.Builder ad = new AlertDialog.Builder(this);
         ad.setTitle("Instructions");
-        ad.setMessage("These are some instructions");
+        ad.setMessage("To improve the application's security and performance, it is important to use the entire range of the rating scale (from 1 to 10) when you rate the images");
         ad.setPositiveButton("OK", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
