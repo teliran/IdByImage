@@ -116,7 +116,7 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             ImageView img = findViewById(id);
             img.setOnClickListener(this);
         }
-
+        submit.setEnabled(false);
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.BLACK);
         sendAllImagesRatings(); //This is in case the ratings were not send in setup.
@@ -234,6 +234,9 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());
             img.setImageDrawable(this.getResources().getDrawable(drawableResourceId,null));
             selected.add(name);
+            if(selected.size()==imgsToSelect){
+                submit.setEnabled(true);
+            }
         }
     }
 

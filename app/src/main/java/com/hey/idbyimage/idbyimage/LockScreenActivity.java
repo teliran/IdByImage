@@ -100,6 +100,7 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
 
         View view = this.getWindow().getDecorView();
         view.setBackgroundColor(Color.BLACK);
+        submit.setEnabled(false);
     }
 
     private void setupSharedPreferences(SharedPreferences sharedPreferences) {
@@ -152,21 +153,6 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private Bitmap addWaterMark(Bitmap src) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        Bitmap result = Bitmap.createBitmap(w, h, src.getConfig());
-        Canvas canvas = new Canvas(result);
-        canvas.drawBitmap(src, 0, 0, null);
-
-        Bitmap waterMark = BitmapFactory.decodeResource(getResources(), R.drawable.checked);
-        //  canvas.drawBitmap(waterMark, 0, 0, null);
-        int startX= (canvas.getWidth()-waterMark.getWidth())/2;//for horisontal position
-        int startY=(canvas.getHeight()-waterMark.getHeight())/2;//for vertical position
-        canvas.drawBitmap(waterMark,startX,startY,null);
-
-        return result;
-    }
 
     public HashMap<String, Integer> getAllRatingsMap(){
         HashMap<String,Integer> imageRatings = new HashMap<String, Integer>();
@@ -228,6 +214,9 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());
             img.setImageDrawable(this.getResources().getDrawable(drawableResourceId,null));
             selected.add(name);
+            if(selected.size()==imgsToSelect){
+                submit.setEnabled(true);
+            }
         }
     }
 

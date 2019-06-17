@@ -44,34 +44,38 @@ public class UserData extends AppCompatActivity implements View.OnClickListener 
             RadioGroup genderRadioGroup = findViewById(R.id.radioGroup);
             RadioButton selectedRadioGroup = findViewById(genderRadioGroup.getCheckedRadioButtonId());
             final String gender = selectedRadioGroup.getText().toString();
-            EditText ageInput = findViewById(R.id.ageInput);
-            int age = Integer.parseInt(ageInput.getText().toString());
-            if (age<5 || age>100)
-                Toast.makeText(this,"Age not valid",Toast.LENGTH_SHORT).show();
-            else{
-                final String sAge = age+"";
-                SharedPreferences.Editor editor = userData.edit();
-                editor.putString("UserData", "true");
-                editor.commit();
-                //---------------------------Send Data----------------------------
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dc.sendUserDataToServer(id, sAge, gender);
+            try {
+                EditText ageInput = findViewById(R.id.ageInput);
+                int age = Integer.parseInt(ageInput.getText().toString());
+                if (age < 5 || age > 100)
+                    Toast.makeText(this, "Age not valid", Toast.LENGTH_SHORT).show();
+                else {
+                    final String sAge = age + "";
+                    SharedPreferences.Editor editor = userData.edit();
+                    editor.putString("UserData", "true");
+                    editor.commit();
+                    //---------------------------Send Data----------------------------
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dc.sendUserDataToServer(id, sAge, gender);
+                        }
+                    });
+                    t.setName("Send user data");
+                    t.setPriority(Thread.MAX_PRIORITY);
+                    t.start();
+                    try {
+                        Thread.currentThread().join(1000);
+                    } catch (InterruptedException e) {
+                        Log.e("Thread Error: ", t.getName());
                     }
-                });
-                t.setName("Send user data");
-                t.setPriority(Thread.MAX_PRIORITY);
-                t.start();
-                try {
-                    Thread.currentThread().join(1000);
-                } catch (InterruptedException e) {
-                    Log.e("Thread Error: ", t.getName());
+                    ////////////////////////////////////////////////////////////////////
+                    Intent pinIntent = new Intent(this, PinLockActivity.class);
+                    startActivity(pinIntent);
+                    finish();
                 }
-                ////////////////////////////////////////////////////////////////////
-                Intent pinIntent = new Intent(this,PinLockActivity.class);
-                startActivity(pinIntent);
-                finish();
+            }catch (NumberFormatException e){
+                Toast.makeText(this, "Age is not valid", Toast.LENGTH_SHORT).show();
             }
         }
     }
