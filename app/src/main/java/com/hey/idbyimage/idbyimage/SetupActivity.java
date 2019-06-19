@@ -251,7 +251,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 return;
             }
             saveRatings();
-            //-----------Data Collecting---------------
+            /*-----------Data Collecting---------------
             dc.checkServerStatus();
             if (dc.getServerStatus()==200) {
                 setWasImagesSentFlag(true);
@@ -274,7 +274,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
             //-----------End of Data Collecting------------
-
+            */
             startActivity(new Intent(this,MenuActivity.class));
             finish();
         }

@@ -216,7 +216,8 @@ public class LockScreenActivity extends AppCompatActivity implements View.OnClic
             selected.add(name);
             if(selected.size()==imgsToSelect){
                 submit.setEnabled(true);
-            }
+            }else
+                submit.setEnabled(false);
         }
     }
 

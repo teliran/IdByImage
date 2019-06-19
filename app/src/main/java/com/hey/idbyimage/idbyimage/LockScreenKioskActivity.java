@@ -229,6 +229,10 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             if (selected.contains(name)) {
                 selected.remove(name);
                 img.setImageResource(android.R.color.transparent);
+                if(selected.size()==imgsToSelect){
+                    submit.setEnabled(true);
+                }else
+                    submit.setEnabled(false);
                 return;
             }
             int drawableResourceId = this.getResources().getIdentifier("checked", "drawable", this.getPackageName());
@@ -236,7 +240,8 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             selected.add(name);
             if(selected.size()==imgsToSelect){
                 submit.setEnabled(true);
-            }
+            }else
+                submit.setEnabled(false);
         }
     }
 
@@ -245,6 +250,8 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
             //session id should here
             if (currentScreenNum == numOfScreens){
                 kioskMode.lockUnlock(this, false);
+                /* -----------Data Collecting---------------
+
                 actionsData.setTimeStamp(dc.getCurrentTimestamp());
                 actionsData.setSelected(selected);
                 actionsData.setSuccess(true);
@@ -253,50 +260,66 @@ public class LockScreenKioskActivity extends BaseActivity implements View.OnClic
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 this.finish();
                 runQueryThread();
-                moveTaskToBack(true);
+                 */
+
+                this.finish();
                 System.exit(0);
             }
             else
             {
                 selected = new ArrayList<String>();
+                /*  -----------Data Collecting---------------
                 actionsData.setScreenOrder(currentScreenNum);
+                */
                 currentScreenNum++;
+                screenIndic.setText(currentScreenNum+"/"+numOfScreens);
                 updateImages();
+                /* -----------Data Collecting---------------
                 actionsData.setSelected(selected);
                 actionsData.setSuccess(true);
                 timeEnd = System.currentTimeMillis();
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 actionsData.setTimeStamp(dc.getCurrentTimestamp());
-                screenIndic.setText(currentScreenNum+"/"+numOfScreens);
                 runQueryThread();
+                 */
+                onFailShowPin=false;
+                Toast.makeText(this,"Success but not finished",Toast.LENGTH_SHORT).show();
             }
 
 
         }
-        else {//
+        else {
+            /* -----------Data Collecting---------------
             actionsData.setSuccess(false);
             actionsData.setTimeStamp(dc.getCurrentTimestamp());
             timeEnd = System.currentTimeMillis();
             actionsData.setScreenOrder(currentScreenNum);
+             */
             if (!onFailShowPin) {
-                actionsData.setSelected(selected);
-                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 selected = new ArrayList<String>();
                 updateImages();
                 onFailShowPin=true;
+                /* -----------Data Collecting---------------
+                actionsData.setSelected(selected);
+                actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 runQueryThread();
+                 */
+                Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show();
             }
             else{
+                /* -----------Data Collecting---------------
                 actionsData.setSelected(selected);
                 actionsData.setTimeToPass((int)(timeEnd-timeStart));
                 actionsData.setTimeStamp(dc.getCurrentTimestamp());
-                //runQueryThread();
+                 */
                 Intent pinLock = new Intent(this,PinLockScreenActivity.class);
                 startActivity(pinLock);
                 finish();
-                runQueryThread();
-            }
 
+                /* -----------Data Collecting---------------
+                runQueryThread();
+                 */
+            }
         }
     }
 

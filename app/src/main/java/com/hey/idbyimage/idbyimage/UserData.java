@@ -50,6 +50,7 @@ public class UserData extends AppCompatActivity implements View.OnClickListener 
                 if (age < 5 || age > 100)
                     Toast.makeText(this, "Age not valid", Toast.LENGTH_SHORT).show();
                 else {
+                    /* -----------Data Collecting---------------
                     final String sAge = age + "";
                     SharedPreferences.Editor editor = userData.edit();
                     editor.putString("UserData", "true");
@@ -69,6 +70,7 @@ public class UserData extends AppCompatActivity implements View.OnClickListener 
                     } catch (InterruptedException e) {
                         Log.e("Thread Error: ", t.getName());
                     }
+                    */
                     ////////////////////////////////////////////////////////////////////
                     Intent pinIntent = new Intent(this, PinLockActivity.class);
                     startActivity(pinIntent);

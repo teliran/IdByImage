@@ -38,8 +38,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MenuActivity"/>
         </activity>
-        <activity android:name=".MenuActivity" />
-        <activity android:name=".PinLockActivity" />
         <activity android:name=".SettingsActivity" />
 
         <receiver

@@ -49,7 +49,7 @@ public class FlowWelcomeInstraction {
         button.check(matches(isDisplayed()));
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.instructionText), withText("You are about to rate a set of images. \nIn order to make the identification as accurate as possible we encourage you to rate the images as versatile and accurate as possible. \nOnce you will finish the initial rating you will be asked to choose the most beautiful images from a set of images. \nIf you will choose your top rated images, you will be granted the access to your device. \nNote! there is a safety mechanism to prevent you from getting locked out of your device."),
+                allOf(withId(R.id.instructionText), withText("You are about to rate a set of images. \nIn order to make the identification as accurate as possible we encourage you to rate the images accurately but also to try to use a wide range of ratings (between 1 and 10). \nAfter that, we will show you a set of images and you will be asked to select the most beautiful ones. \nIf your selection will match your ratings from the previous rate (that is, if you select the most beautiful images), then you will be granted access to your device. \nNote! There is a safety mechanism to keep you from being locked out of your device."),
                         isDisplayed()));
         textView.check(matches(isDisplayed()));
 

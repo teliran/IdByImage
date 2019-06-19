@@ -105,7 +105,7 @@ public class FlowSetupPhase {
             settingsbtn.check(matches(isDisplayed()));
 
         }catch (BadRatingDistributionException e){
-            ValidateSetupLayout();
+
         }
 
 
